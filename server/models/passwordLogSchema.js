@@ -1,33 +1,34 @@
 const mongoose = require('mongoose')
 
-// password_log schema
+//PasswordLog schema
 const passwordLogSchema = new mongoose.Schema({
     userid:
-    {
-        type: Number,
-        required: true
-        //required: [true, "Please enter a userid"]
-    },
-    password: 
+	{
+	    type: Number,
+		required: true
+		//required: [true, "Please enter a userid"]
+	},
+
+    username:
     {
         type: String,
-        required: true
+        required: false,
+    }, 
+
+    password:
+    {
+        type: String,
+        required: true,
         //required: [true, "Please enter a password"]
     },
-    username: 
-    {
-        type: String,
-        required: false
-    },
+
     application:
     {
         type: String,
-        required: true
+        required: true,
     }
 })
 
-//creating model for db
-const PasswordLogModel = db.model("password_log", passwordLogSchema)
-
-//export
-module.exports = PasswordLogModel
+//Export the general model
+const PasswordLog = mongoose.model("PasswordLog", passwordLogSchema);
+module.exports = PasswordLog;
