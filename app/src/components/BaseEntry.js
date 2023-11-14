@@ -1,15 +1,26 @@
 import React, {useState} from "react";
 
-const BaseEntry = ({key, heading, children, className=""}) => {
+const BaseEntry = ({heading, children, className="", editing, onEdit, onSave, onCancel}) => {
   const [isCollapsed, setCollapsed] = useState(true);
 
   return (
-    // <details key={key} {...props} open={!isCollapsed} onToggle={e => setCollapsed(!e.currentTarget.open)}>
-    //   <summary>{name}</summary>
-    //   {children}
-    // </details>
-    <li key={key} className={"entry " + className + (isCollapsed ? " collapsed" : "")}>
-      <header>{heading}</header>
+    <li className={"entry " + className + (isCollapsed ? " collapsed" : "")}>
+      <header>
+        {heading}
+        <span className="entry-buttons">
+          {
+            editing
+            ? <>
+              <button type="button" onClick={() => { onCancel(); }}>[Cancel]</button>
+              <button type="button" onClick={() => { onSave(); }}>[Save]</button>
+            </>
+            : <>
+              <button type="button" onClick={() => { setCollapsed(false); onEdit() }}>[Edit]</button>
+              <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children}>[Collapse/Expand]</button>
+            </>
+          }
+        </span>
+      </header>
       <div>
         {children}
       </div>

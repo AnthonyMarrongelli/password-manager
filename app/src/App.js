@@ -34,7 +34,24 @@ const App = () => {
       <Route path="/" element={<Index />}>
         {/* <Route index /> */}
         <Route path="/logins"
-          loader={async () => defer({items: authFetch("/api/logins", {}, [{key: "1", name: "an item!"}, {key: "2", name: "another item!"}], 1000)})}
+          loader={async () => defer({items: authFetch("/api/logins", {}, [
+            {key: "1", application: "an item!", username: "user1", password: "password1"},
+            {key: "2", application: "another item!", username: "user2", password: "pass2"},
+          ], 1000)})}
+          element={<Entries />}
+        />
+        <Route path="/notes"
+          loader={async () => defer({items: authFetch("/api/secure-notes", {}, [
+            {key: "1", type: "secureNote", title: "A secure note! Not really.", text: "Lorem ipsum dolor sit amet, or whatever."},
+            {key: "2", type: "secureNote", title: "Another fake secure note!", text: "Lorem ipsum dolor sit amet II, or whatever."},
+          ], 1000)})}
+          element={<Entries />}
+        />
+        <Route path="/cards"
+          loader={async () => defer({items: authFetch("/api/cards", {}, [
+            {key: "1", type: "card", cardNumber: "1234567890123456", firstName: "Cardholder", lastName: "One", cvv: "111", expiration: "2025-01", bank: "Bank of Cardholding"},
+            {key: "2", type: "card", cardNumber: "2345678901234561", firstName: "Cardholder", lastName: "Two", cvv: "222", expiration: "2025-02", bank: "Cardholders Inc"},
+          ], 1000)})}
           element={<Entries />}
         />
         <Route path="/*" element={<>Whoops! Page not found.</>} />

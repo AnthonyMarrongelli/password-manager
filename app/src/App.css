@@ -53,6 +53,16 @@
     bottom: 0;
     width: 20em;
     background-color: #ddd;
+    > a {
+      display: block;
+      padding: .5em;
+      &.current {
+        background-color: #ccc;
+      }
+      &:hover {
+        background-color: #bbb;
+      }
+    }
   }
   > main {
     position: fixed;
@@ -78,11 +88,37 @@
     > * {
       padding: 1em;
     }
-    > header {
+    > :first-child {
       background-color: #ddd;
+      display: flex;
+      > :not(:last-child) {
+        flex: 20em 1 0;
+        display: flex;
+        &:first-child {
+          flex-grow: 2;
+        }
+        > :first-child {
+          flex-grow: 1;
+        }
+        > :not(:first-child) {
+          flex-grow: 0;
+        }
+        > :not(:first-child > :first-child) {
+          margin-left: 0.5em;
+        }
+      }
     }
-    &.collapsed > div {
+    &.collapsed > :last-child {
       display: none;
     }
   }
+}
+
+.entry > :last-child label {
+  display: block;
+}
+.secure-note textarea {
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
 }
