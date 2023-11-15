@@ -44,6 +44,29 @@ router.post('/update/:id', userVerification.verifyUser, async (request, response
 });
 
 /* ----------Delete API---------- */
-//...
+// Delete the current user from the database, and delete their session cookie
+router.delete('/delete/:id', userVerification.verifyUser, async (request, response, next) => { //User if verified in verifyUser before API does anything
+    // Check for agreement in user between the request and the session cookie
+    if(request.currentUser.userid !== request.params.id) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
+
+    try {
+
+        await User.findByIdAndDelete(request.params.id);
+
+        //Erase the session cookie
+        response.clearCookie('session');
+
+        //Report user deletion
+        response
+            .status(200) // 200 is successful response code
+            .json('This user has been deleted...');
+
+        console.log("This user has been deleted...");
+
+    } catch(error) {
+        next(error);
+    }
+
+});
 
 module.exports = router;

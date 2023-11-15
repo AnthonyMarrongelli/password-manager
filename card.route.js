@@ -67,7 +67,27 @@ router.post('/update/:id', userVerification.verifyUser, async (request, response
 
 
 /* ----------Delete API---------- */
-//...
+// Delete the specified card
+router.delete('/delete/:id', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
+    // Check for agreement in user between the request and the session cookie
+    if(request.currentUser.userid !== request.body.userid) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
+
+    try {
+
+        await CardLog.findByIdAndDelete(request.params.id);
+
+        //Report card deletion
+        response
+            .status(200) // 200 is successful response code
+            .json('This card has been deleted...');
+
+        console.log("This card has been deleted...");
+
+    } catch(error) {
+        next(error);
+    }
+
+});
 
 
 module.exports = router;

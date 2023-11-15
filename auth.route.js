@@ -51,7 +51,7 @@ router.post('/signin', async (request, response, next) => {
             if(bcryptjs.compareSync(password, currentUser.password)) {
 
                 //Save a session cookie (weeklong lifespan)
-                const sessionToken = jwt.sign({userid: currentUser._id}, '[REDACTED SECRET KEY]') //second param is like a salt for the token. should be secret
+                const sessionToken = jwt.sign({userid: currentUser._id}, 'thanatos') //second param is like a salt for the token. should be secret
                 
                 //Redact the password before returning
                 const {password: hashedPassword, ...currentUserSecure} = currentUser._doc;
@@ -69,6 +69,28 @@ router.post('/signin', async (request, response, next) => {
     
     } catch(error) { 
        next(error); //Pass error to the middleware
+    }
+});
+
+/* ----------SignOut API---------- */
+// Sign the user out by getting rid of the session cookie
+router.get('/signout', async (request, response, next) => {
+    
+    // End the session
+    try {
+
+        //Erase the session cookie
+        response.clearCookie('session');
+
+        //Report the logout
+        response
+            .status(200) // 200 is successful response code
+            .json('User has been logged out!');
+
+        console.log("User has been logged out!");
+
+    } catch(error) {
+        next(error);
     }
 });
 
