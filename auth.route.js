@@ -51,7 +51,7 @@ router.post('/signin', async (request, response, next) => {
             if(bcryptjs.compareSync(password, currentUser.password)) {
 
                 //Save a session cookie (weeklong lifespan)
-                const sessionToken = jwt.sign({userid: currentUser._id}, 'thanatos') //second param is like a salt for the token. should be secret
+                const sessionToken = jwt.sign({userid: currentUser._id}, '[REDACTED SECRET KEY]') //second param is like a salt for the token. should be secret
                 
                 //Redact the password before returning
                 const {password: hashedPassword, ...currentUserSecure} = currentUser._doc;
