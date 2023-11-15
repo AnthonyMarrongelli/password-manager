@@ -1,18 +1,17 @@
 const express = require('express')
-const SecureNote = require('../models/secureNote.model.js') //Pls have .js here
-const User = require('../models/user.model.js')             //Pls have .js here
-const customError = require('../util/customError.js');   //For handling custom errors
-const userVerification = require('../util/userVerification.js');   //For handling custom errors
+const SecureNote = require('../models/secureNote.model.js')
+const User = require('../models/user.model.js')                     //Need this because we use verifyUser from userVerification
+const customError = require('../util/customError.js');              //For handling custom errors
+const userVerification = require('../util/userVerification.js');    //For checking the current user against their session cookie
 
 //Creates the router
 const router = express.Router();
 
 /* ----------Create API---------- */
 //Create a new Secure Note and store it in the db
-router.post('/create', async (request, response, next) => { //next arg lets us use the middware
-    //Information we get from the browser
-    console.log(request.body);
-    console.log("Creating.........");
+router.post('/create', async (request, response, next) => {
+
+    console.log("Storing new note.........");
 
     //Collate data
     const { userid, title, text } = request.body;
@@ -20,7 +19,7 @@ router.post('/create', async (request, response, next) => { //next arg lets us u
     //Add user to the db
     const newSecureNote = new SecureNote({userid, title, text});
     try {
-        await newSecureNote.save(); //Save inside the DB. Await keeps us here until task complete
+        await newSecureNote.save(); //Save inside the DB
         response.status(201).json("Note created!"); // 201 means something was created
         console.log("Note created!");
     
@@ -34,6 +33,8 @@ router.post('/create', async (request, response, next) => { //next arg lets us u
 router.post('/update/:id', userVerification.verifyUser, async (request, response, next) => { //User if verified in verifyUser before API does anything
     // Check for agreement in user and note owner
     if(request.currentUser.userid !== request.body.userid) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
+
+    console.log("Updating your note.........");
 
     try {
 
@@ -51,7 +52,7 @@ router.post('/update/:id', userVerification.verifyUser, async (request, response
             .status(200) // 200 is successful response code
             .json(updatedNote);
 
-        console.log("Updated Successfully!");
+        console.log("Secure Note Updated Successfully!");
 
     } catch(error) {
         next(error);
@@ -66,6 +67,8 @@ router.delete('/delete/:id', userVerification.verifyUser, async (request, respon
     // Check for agreement in user between the request and the session cookie
     if(request.currentUser.userid !== request.body.userid) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
 
+    console.log("Deleting your note...");
+
     try {
 
         await SecureNote.findByIdAndDelete(request.params.id);
@@ -76,6 +79,36 @@ router.delete('/delete/:id', userVerification.verifyUser, async (request, respon
             .json('This secure note has been deleted...');
 
         console.log("This secure note has been deleted...");
+
+    } catch(error) {
+        next(error);
+    }
+
+});
+
+/* ----------List API---------- */
+// Return all notes that belong to the specified user
+router.get('/list/:id', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
+    // Check for agreement in user between the request and the session cookie
+    if(request.currentUser.userid !== request.params.id) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
+
+    console.log("Fetching the user's secure notes...");
+
+    try {
+        // Get the search term if it exists (should be as such /api/note/list/id:...?keyword=...)
+        const keyword = request.query.keyword || '';
+
+        const noteList = await SecureNote.find({
+            userid: request.params.id,
+            title: {$regex: keyword, $options: 'i'} // Title contians the keyword somewhere as a substring. Non-case-sesitive
+        });
+
+        //Respond with the collection of notes 
+        response
+            .status(200) // 200 is successful response code
+            .json(noteList);
+
+        console.log("Notes retrieved successfully!");
 
     } catch(error) {
         next(error);

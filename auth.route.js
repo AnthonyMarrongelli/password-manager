@@ -1,19 +1,18 @@
 const express = require('express')
 const bcryptjs = require('bcryptjs')                        //Hashing algorithm
-const User = require('../models/user.model.js')             //Pls have .js here
-const customError = require('../util/customError.js');   //For handling custom errors
-const jwt = require('jsonwebtoken');                        //For creating the cookie
+const User = require('../models/user.model.js')
+const customError = require('../util/customError.js');      //For handling custom errors
+const jwt = require('jsonwebtoken');                        //For creating the session cookie
 
 
 //Creates the router
 const router = express.Router();
 
 /* ----------SignUp API---------- */
-//Send signup information API. Async lets us use await
-router.post('/signup', async (request, response, next) => { //next arg lets us use the middware
-    //Information we get from the browser
-    console.log(request.body);
-    console.log("Creating.........");
+//Send signup information API
+router.post('/signup', async (request, response, next) => { // Async lets us use await; next arg lets us use the middware
+
+    console.log("Creating a new user.........");
 
     //Collate data
     const { username, email, password } = request.body;
@@ -34,9 +33,8 @@ router.post('/signup', async (request, response, next) => { //next arg lets us u
 /* ----------SignIn API---------- */
 //Check if the user is who they say they are by checking the database for an email match. Compare passwords, and if things check out, log the user in by creating a session cookie for them
 router.post('/signin', async (request, response, next) => {
-    //Information we get from the browser
-    console.log(request.body);
-    console.log("Loading.........");
+
+    console.log("Logging in.........");
 
     //Collate data
     const { email, password } = request.body;
@@ -53,7 +51,7 @@ router.post('/signin', async (request, response, next) => {
                 //Save a session cookie (weeklong lifespan)
                 const sessionToken = jwt.sign({userid: currentUser._id}, '[REDACTED SECRET KEY]') //second param is like a salt for the token. should be secret
                 
-                //Redact the password before returning
+                //Redact the password before returning the user information
                 const {password: hashedPassword, ...currentUserSecure} = currentUser._doc;
 
                 response

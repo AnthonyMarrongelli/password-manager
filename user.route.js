@@ -1,8 +1,8 @@
 const express = require('express')
-const User = require('../models/user.model.js')             //Pls have .js here
-const customError = require('../util/customError.js');   //For handling custom errors
-const userVerification = require('../util/userVerification.js');   //For handling custom errors
-const bcryptjs = require('bcryptjs')                        //Hashing algorithm
+const User = require('../models/user.model.js')
+const customError = require('../util/customError.js');              //For handling custom errors
+const userVerification = require('../util/userVerification.js');    //For checking the current user against their session cookie
+const bcryptjs = require('bcryptjs')                                //Password hashing algorithm
 
 //Creates the router
 const router = express.Router();
@@ -12,6 +12,8 @@ const router = express.Router();
 router.post('/update/:id', userVerification.verifyUser, async (request, response, next) => { //User if verified in verifyUser before API does anything
     // Check for agreement in user between the request and the session cookie
     if(request.currentUser.userid !== request.params.id) return next(customError.errorHandler(404, 'This user does not exist!'));
+
+    console.log("Updating your information.........");
 
     try {
 
@@ -48,6 +50,8 @@ router.post('/update/:id', userVerification.verifyUser, async (request, response
 router.delete('/delete/:id', userVerification.verifyUser, async (request, response, next) => { //User if verified in verifyUser before API does anything
     // Check for agreement in user between the request and the session cookie
     if(request.currentUser.userid !== request.params.id) return next(customError.errorHandler(401, 'Insufficient authorization required for execution!'));
+
+    console.log("Deleting account...");
 
     try {
 
