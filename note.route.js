@@ -95,7 +95,7 @@ router.get('/list/:id', userVerification.verifyUser, async (request, response, n
     console.log("Fetching the user's secure notes...");
 
     try {
-        // Get the search term if it exists (should be as such /api/note/list/id:...?keyword=...)
+        // Get the search term if it exists (should be as such /server/note/list/id:...?keyword=...)
         const keyword = request.query.keyword || '';
 
         const noteList = await SecureNote.find({
