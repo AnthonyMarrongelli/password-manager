@@ -7,7 +7,7 @@ const BaseEntryCell = ({copyText, children}) => (
   </td>
 );
 
-const CreditCardEntryCell = ({text, disabled, onChange}) => {
+const CardEntryCell = ({text, disabled, onChange}) => {
   const [masked, setMasked] = useState(true);
 
   return (
@@ -30,4 +30,4 @@ const EntryCell = ({text, copyable=false, maskable=false, disabled=false, onChan
 }
 
 export default EntryCell;
-export {CreditCardEntryCell};
+export {CardEntryCell};

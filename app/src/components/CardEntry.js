@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import BaseEntry from "./BaseEntry.js";
-import EntryCell, {CreditCardEntryCell} from "./EntryCell.js";
+import EntryCell, {CardEntryCell} from "./EntryCell.js";
 
-const CreditCardEntry = ({cardInfo}) => {
+const CardEntry = ({cardInfo}) => {
   const [editable, setEditable] = useState(false);
   const [cardNumber, setCardNumber] = useState(cardInfo.cardNumber ?? "");
   const [cvv, setCVV] = useState(cardInfo.cvv ?? "");
@@ -25,7 +25,7 @@ const CreditCardEntry = ({cardInfo}) => {
       }}
       heading={<>
         <EntryCell text={bank} onChange={setBank} disabled={!editable} />
-        <CreditCardEntryCell text={cardNumber} onChange={setCardNumber} disabled={!editable} />
+        <CardEntryCell text={cardNumber} onChange={setCardNumber} disabled={!editable} />
       </>}
     >
       {JSON.stringify(cardInfo)}
@@ -48,4 +48,4 @@ const CreditCardEntry = ({cardInfo}) => {
   );
 }
 
-export default CreditCardEntry;
+export default CardEntry;
