@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import SignupForm from "../components/SignupForm.js";
 import LoginForm from "../components/LoginForm.js";
 
-const Login = () => {
+const Login = ({devMode, setDevMode}) => {
   const [isSignup, setSignup] = useState(false);
 
   return (
@@ -15,12 +15,15 @@ const Login = () => {
             isSignup
             ? <>
               <SignupForm />
-              <p>Already have an account? {<a href="#" onClick={e => {e.preventDefault(); setSignup(false)}}>Log in</a>}.</p>
+              <p>Already have an account? <button type="button" onClick={e => {e.preventDefault(); setSignup(false)}}>Log in</button>.</p>
               </>
             : <>
-              <LoginForm />
-              <p>Need an account? {<a href="#" onClick={e => {e.preventDefault(); setSignup(true)}}>Sign up</a>}.</p>
+              <LoginForm devMode={devMode} />
+              <p>Need an account? <button type="button" onClick={e => {e.preventDefault(); setSignup(true)}}>Sign up</button>.</p>
               </>
+          }
+          {
+            setDevMode && <p>Dev mode is currently {devMode ? <><b>on</b>, meaning requests will not be sent.</> : <b>off</b>}. <button onClick={() => setDevMode(!devMode)}>Toggle dev mode</button></p>
           }
         </div>
       </div>
