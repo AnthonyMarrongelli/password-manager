@@ -1,13 +1,17 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useCookies} from "react-cookie"
-import {Navigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const Logout = () => {
   const [,, deleteCookie] = useCookies(["token"]);
+  const navigate = useNavigate();
 
-  deleteCookie("token");
+  useEffect(() => {
+    deleteCookie("token");
+    navigate("/", {replace: true});
+  });
 
-  return <Navigate to="/" replace />
+  return <>Logging you out...</>
 }
 
 export default Logout;
