@@ -1,13 +1,22 @@
 import React, {useState} from "react";
 
-const BaseEntry = ({heading, children, className="", editing, onEdit, onSave, onCancel}) => {
+const BaseEntry = ({children, className="", editing, onEdit, onSave, onCancel, title="", subtitle=""}) => {
   const [isCollapsed, setCollapsed] = useState(true);
 
   return (
     <li className={"entry " + className + (isCollapsed ? " collapsed" : "")}>
       <header>
-        {heading}
+        <div className="entry-heading">
+          <h2>{title}</h2>
+          {subtitle && <h3>{subtitle}</h3>}
+        </div>
         <span className="entry-buttons">
+          <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || editing}>[Collapse/Expand]</button>
+        </span>
+      </header>
+      <div>
+        {children}
+        <div className="edit-controls">
           {
             editing
             ? <>
@@ -16,13 +25,9 @@ const BaseEntry = ({heading, children, className="", editing, onEdit, onSave, on
             </>
             : <>
               <button type="button" onClick={() => { setCollapsed(false); onEdit() }}>[Edit]</button>
-              <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children}>[Collapse/Expand]</button>
             </>
           }
-        </span>
-      </header>
-      <div>
-        {children}
+        </div>
       </div>
     </li>
   );

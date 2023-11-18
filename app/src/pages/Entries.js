@@ -12,7 +12,7 @@ const Entries = ({onEnterDevMode}) => {
     <React.Suspense fallback={<div className="loader">Loading...</div>}>
       <Await
         resolve={items}
-        errorElement={<>Couldn't load anything...{onEnterDevMode && <p>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</>}
+        errorElement={<>Couldn't load anything...{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</>}
         children={(items) => items.length
           ? items.map(item => {
             switch (item.type) {
@@ -20,7 +20,7 @@ const Entries = ({onEnterDevMode}) => {
               case "card": return <CardEntry cardInfo={item} />;
               default: return <LoginEntry loginInfo={item} />;
             }})
-          : <>No logins yet!</>}
+          : <>No entries yet!</>}
       />
     </React.Suspense>
   </div>

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import BaseEntry from "./BaseEntry.js";
-import EntryCell from "./EntryCell.js";
 
 const SecureNoteEntry = ({noteInfo}) => {
   const [title, setTitle] = useState(noteInfo.title);
@@ -9,18 +8,17 @@ const SecureNoteEntry = ({noteInfo}) => {
 
   return (
     <BaseEntry key={noteInfo.key} className="secure-note"
+      title={title}
       editing={editable} onEdit={() => setEditable(true)} onSave={() => {
         setEditable(false);
         // TODO
       }}
       onCancel={() => {
         setEditable(false);
-        setTitle(noteInfo.application); setText(noteInfo.text);
+        setTitle(noteInfo.title); setText(noteInfo.text);
       }}
-      heading={<>
-        <EntryCell text={title} onChange={setTitle} disabled={!editable} />
-      </>}
     >
+      <input type="text" required value={title} onChange={e => setTitle(e.currentTarget.value)} disabled={!editable} />
       <textarea onChange={e => setText(e.currentTarget.value)} disabled={!editable} value={text} />
     </BaseEntry>
   );

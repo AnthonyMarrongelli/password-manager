@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import BaseEntry from "./BaseEntry.js";
-import EntryCell from "./EntryCell.js";
+import CopyableInput from "./CopyableInput.js";
 import {generate} from "generate-password-browser";
 import PassGenOptions from "./PassGenOptions.js";
 
@@ -12,6 +12,8 @@ const LoginEntry = ({loginInfo}) => {
 
   return (
     <BaseEntry key={loginInfo.key} className="login"
+      title={application}
+      subtitle={username}
       editing={editable} onEdit={() => setEditable(true)} onSave={() => {
         setEditable(false);
         // TODO
@@ -20,14 +22,22 @@ const LoginEntry = ({loginInfo}) => {
         setEditable(false);
         setApplication(loginInfo.application); setUsername(loginInfo.username); setPassword(loginInfo.password);
       }}
-      heading={<>
-        <EntryCell text={application} onChange={setApplication} disabled={!editable} />
-        <EntryCell text={username} onChange={setUsername} copyable disabled={!editable} />
-        <EntryCell text={password} onChange={setPassword} copyable maskable disabled={!editable} />
-      </>}
     >
-      {JSON.stringify(loginInfo)}
-      <PassGenOptions defaults={{}} onSubmit={options => setPassword(generate(options))} disabled={!editable} />
+      <label>
+        Application: <input type="text" required value={application} onChange={e => setApplication(e.currentTarget.value)} disabled={!editable} />
+      </label>
+      <label>
+        Username: <CopyableInput text={username} onChange={setUsername} disabled={!editable} />
+      </label>
+      <label>
+        Password: <CopyableInput text={password} onChange={setPassword} maskable disabled={!editable} />
+      </label>
+      {editable && (
+        <details>
+          <summary>Password generator</summary>
+          <PassGenOptions defaults={{}} onSubmit={options => setPassword(generate(options))} disabled={!editable} />
+        </details>
+      )}
     </BaseEntry>
   );
 };

@@ -21,7 +21,7 @@ const Landing = ({devMode, onLeaveDevMode}) => {
         <NavLink to="/logout">Sign out</NavLink>
       </nav>
       <main>
-        {devMode && <p><b>You're currently in dev mode.</b> No requests will be sent; dummy data will be used instead. <button onClick={onLeaveDevMode}>Leave dev mode</button></p>}
+        {devMode && <p style={{color: "#400", backgroundColor: "#fdd"}}><b>You're currently in dev mode.</b> No requests will be sent; dummy data will be used instead. <button onClick={onLeaveDevMode}>Leave dev mode</button></p>}
         <Outlet />
       </main>
     </div>

@@ -23,7 +23,7 @@ const Login = ({devMode, setDevMode}) => {
               </>
           }
           {
-            setDevMode && <p>Dev mode is currently {devMode ? <><b>on</b>, meaning requests will not be sent.</> : <b>off</b>}. <button onClick={() => setDevMode(!devMode)}>Toggle dev mode</button></p>
+            setDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Dev mode is currently {devMode ? <><b>on</b>, meaning requests will not be sent.</> : <b>off</b>}. <button onClick={() => setDevMode(!devMode)}>Toggle dev mode</button></p>
           }
         </div>
       </div>
