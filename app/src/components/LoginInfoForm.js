@@ -12,7 +12,8 @@ export const LoginInfoForm = ({devMode}) => {
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
-    const response = await debugFetch("/api/signup", {body: {username, password, emailToken}}, devMode, {success: true, token: 1}, 1000);
+    const response = await debugFetch("/api/signup", {body: {username, password, emailToken}},
+      devMode, {success: true, token: {"access_token": "eyJhb...", "token_type": "Bearer", "expires_in": 3600}}, 1000);
     setCookies("token", response.token);
   }}>
     <h1>Hi there.</h1>

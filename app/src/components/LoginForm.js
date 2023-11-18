@@ -9,7 +9,8 @@ const LoginForm = ({devMode}) => {
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
-    const response = await debugFetch("/api/auth", {body: {username, password}}, devMode, {success: true, token: 1}, 1000);
+    const response = await debugFetch("/api/auth", {body: {username, password}},
+      devMode, {success: true, token: {"access_token": "eyJhb...", "token_type": "Bearer", "expires_in": 3600}}, 1000);
     setCookies("token", response.token);
   }}>
     <h1>Welcome back.</h1>
