@@ -12,8 +12,8 @@ main().catch(err => console.log(err));
 async function main() {
 	/* ----------Connect to Database---------- */
 	//Connect to the server and act based on the reported status
-	await mongoose.connect("mongodb+srv://largeproject23:T6mIXQV2CO7FMkhi@cluster0.o6cf0n2.mongodb.net/RetroSecurityManager?retryWrites=true&w=majority");
-	const db = mongoose.createConnection("mongodb+srv://largeproject23:T6mIXQV2CO7FMkhi@cluster0.o6cf0n2.mongodb.net/RetroSecurityManager?retryWrites=true&w=majority")
+	await mongoose.connect("[redacted]");
+	const db = mongoose.createConnection("[redacted]")
 
 		db.on('error', console.error.bind(console, "Connection error:"))
 
