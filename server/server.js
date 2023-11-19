@@ -1,6 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/auth.route.js')
+const userRouter = require('./routes/user.route.js')
+const noteRouter = require('./routes/note.route.js')
+const cardRouter = require('./routes/card.route.js')
+const passRouter = require('./routes/pass.route.js')
 
 main().catch(err => console.log(err));
 
@@ -27,16 +32,21 @@ async function main() {
 
 	//Specify format
 	app.use(express.json());
+	app.use(cookieParser());
 
 	//Watch a port
 	app.listen(3005, () => {
-		console.log('Server is running on port 3000');
+		console.log('Server is running on port 3005');
 	});
 
 
 	/* ----------API Routes---------- */
 	// Endpoints relating to user credentials
 	app.use("/server/auth", authRouter);
+	app.use("/server/user", userRouter);
+	app.use("/server/note", noteRouter);
+	app.use("/server/card", cardRouter);
+	app.use("/server/pass", passRouter);
 
 
 	/* ----------Middleware---------- */
