@@ -58,7 +58,7 @@ router.post('/signin', async (request, response, next) => {
             if(bcryptjs.compareSync(password, currentUser.password)) {
 
                 //Save a session cookie (weeklong lifespan)
-                const sessionToken = jwt.sign({userid: currentUser._id}, 'thanatos') //second param is like a salt for the token. should be secret
+                const sessionToken = jwt.sign({userid: currentUser._id}, process.env.SECRET_KEY) //second param is like a salt for the token. should be secret
                 
                 //Redact the password before returning the user information
                 const {password: hashedPassword, ...currentUserSecure} = currentUser._doc;
@@ -90,7 +90,7 @@ const sendVerificationEmail = async ({_id, email, username}, next) => {
         //Brevo Initialization
         let defaultClient = brevo.ApiClient.instance;
         let apiKey = defaultClient.authentications['api-key'];
-        apiKey.apiKey = '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';
+        apiKey.apiKey = process.env.BREVO_CON;
 
         //Brevo Connection
         let apiInstance = new brevo.TransactionalEmailsApi();
