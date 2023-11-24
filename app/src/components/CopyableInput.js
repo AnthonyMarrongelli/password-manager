@@ -24,7 +24,7 @@ const CopyableInput = ({text, inputMode="text", maskable=false, disabled=false, 
   return (
     <BaseCopyableInput copyText={text}>
       <input type={masked ? "password" : "text"} inputMode={inputMode} className={masked ? "masked" : ""} disabled={disabled} value={text} onChange={e => onChange(e.currentTarget.value)} minLength={minLength} maxLength={maxLength} required={required} />
-      {maskable && <button type="button" onClick={() => setMasked(!masked)}>[Show/Hide]</button>}
+      {maskable && <button type="button" disabled={false} onClick={() => setMasked(!masked)}>[Show/Hide]</button>}
     </BaseCopyableInput>
   );
 }

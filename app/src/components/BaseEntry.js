@@ -57,7 +57,7 @@ const BaseEntry = ({children, className="", editing, onEdit, onSave, onCancel, o
         <fieldset disabled={!editable || isDeleting}>
           {children}
         </fieldset>
-        <fieldset className="edit-controls" disabled={isDeleting}>
+        <fieldset className="edit-controls" disabled={isDeleting || (editing && !editable)}>
           {
             editing
             ? <>

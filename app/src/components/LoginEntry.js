@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import BaseEntry from "./BaseEntry.js";
 import CopyableInput from "./CopyableInput.js";
 import {generate} from "generate-password-browser";
@@ -7,11 +7,20 @@ import {authFetch} from "../auth.js";
 import {useCookies} from "react-cookie";
 
 const LoginEntry = ({passInfo, onSave, onDelete, devMode}) => {
-  const [application, setApplication] = useState(passInfo?.application ?? "");
-  const [username, setUsername] = useState(passInfo?.username ?? "");
-  const [password, setPassword] = useState(passInfo?.password ?? "");
+  const [application, setApplication] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [unsaved, setUnsaved] = useState(!passInfo);
   const [cookies] = useCookies(["token", "userid"]);
+
+  const init = () => {
+    setApplication(passInfo?.application ?? "");
+    setUsername(passInfo?.username ?? "");
+    setPassword(passInfo?.password ?? "");
+  }
+
+  // layout effects run before the component's added to DOM
+  useLayoutEffect(init, [passInfo]);
 
   return (
     <BaseEntry key={passInfo?.id} className="login"
@@ -25,8 +34,8 @@ const LoginEntry = ({passInfo, onSave, onDelete, devMode}) => {
         onSave(newPass);
       }}
       onCancel={() => {
-        setApplication(passInfo.application); setUsername(passInfo.username); setPassword(passInfo.password);
         setUnsaved(false);
+        init();
       }}
       onDelete={async () => {
         setUnsaved(true);

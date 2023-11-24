@@ -12,7 +12,7 @@ const PassGenOptions = ({onSubmit, defaults}) => {
   const [strict, setStrict] = useState(defaults.strict ?? true);
 
   return (
-    <form className="pass-gen" onSubmit={e => {e.preventDefault(); onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict});}}>
+    <div className="pass-gen">
       <label>
         Length: <input type="number" min="1" max="99" step="1" value={length} onChange={e => setLength(+e.currentTarget.value)} />
       </label>
@@ -38,8 +38,8 @@ const PassGenOptions = ({onSubmit, defaults}) => {
         Include characters from every group: <input type="checkbox" checked={strict} onChange={e => setStrict(e.currentTarget.checked)} />
       </label>
 
-      <button type="submit">Generate</button>
-    </form>
+      <button type="button" onClick={() => onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict})}>Generate</button>
+    </div>
   )
 };
 

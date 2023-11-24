@@ -1,13 +1,20 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import BaseEntry from "./BaseEntry.js";
 import {authFetch} from "../auth.js";
 import {useCookies} from "react-cookie";
 
 const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
-  const [title, setTitle] = useState(noteInfo?.title ?? "");
-  const [text, setText] = useState(noteInfo?.text ?? "");
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
   const [unsaved, setUnsaved] = useState(false);
   const [cookies] = useCookies(["token", "userid"]);
+
+  const init = () => {
+    setTitle(noteInfo?.title ?? "");
+    setText(noteInfo?.text ?? "");
+  }
+
+  useLayoutEffect(init, [noteInfo]);
 
   return (
     <BaseEntry className="secure-note"
@@ -21,7 +28,7 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
       }}
       onCancel={() => {
         setUnsaved(false);
-        setTitle(noteInfo?.title ?? ""); setText(noteInfo?.text ?? "");
+        init();
       }}
       onDelete={async () => {
         setUnsaved(true);

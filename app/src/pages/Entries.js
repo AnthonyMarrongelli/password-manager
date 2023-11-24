@@ -31,7 +31,7 @@ const EntriesList = ({items, DefaultEntryKind, devMode}) => {
   }).concat(<DefaultEntryKind onSave={appendEntry(entries, setEntries)} devMode={devMode} />);
 }
 
-const Entries = ({DefaultEntryKind, onEnterDevMode, devMode}) => {
+const Entries = ({defaultType, onEnterDevMode, devMode}) => {
   const [cookies] = useCookies(["token"]);
   const loaderData = /** @type {{items: object[]}} */ (useLoaderData());
 
@@ -45,7 +45,7 @@ const Entries = ({DefaultEntryKind, onEnterDevMode, devMode}) => {
         resolve={loaderData.items}
         errorElement={<span className="error-message">Couldn't load anything...{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</span>}
         children={(items) => items.length
-          ? <EntriesList DefaultEntryKind={DefaultEntryKind} items={items} devMode={devMode} />
+          ? <EntriesList DefaultEntryKind={defaultType === "secureNote" ? SecureNoteEntry : defaultType === "card" ? CardEntry : LoginEntry} items={items.map(({_id, ...item}) => ({id: _id, type: defaultType, ...item}))} devMode={devMode} />
           : <>No entries yet!</>}
       />
     </React.Suspense>

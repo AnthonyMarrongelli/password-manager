@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import BaseEntry from "./BaseEntry.js";
 import CopyableInput, {CardInput} from "./CopyableInput.js";
 import {authFetch} from "../auth.js";
@@ -6,15 +6,29 @@ import {useCookies} from "react-cookie";
 
 const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
   const [unsaved, setUnsaved] = useState(false);
-  const [cardNumber, setCardNumber] = useState(cardInfo?.cardNumber ?? "");
-  const [cvv, setCVV] = useState(cardInfo?.cvv ?? "");
-  const [expiration, setExpiration] = useState(cardInfo?.expiration ?? "");
-  const [bank, setBank] = useState(cardInfo?.bank ?? "");
-  const [firstName, setFirstName] = useState(cardInfo?.firstName ?? "");
-  const [lastName, setLastName] = useState(cardInfo?.lastName ?? "");
-  const [zip, setZip] = useState(cardInfo?.zip ?? "");
-  const [billingAddress, setBillingAddress] = useState(cardInfo?.billingAddress ?? "");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cvv, setCVV] = useState("");
+  const [expiration, setExpiration] = useState("");
+  const [bank, setBank] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [zip, setZip] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
   const [cookies] = useCookies(["token", "userid"]);
+
+  const init = () => {
+    setCardNumber(cardInfo?.cardNumber ?? "");
+    setCVV(cardInfo?.cvv ?? "");
+    setExpiration(cardInfo?.expiration ?? "");
+    setBank(cardInfo?.bank);
+    setFirstName(cardInfo?.firstName ?? "");
+    setLastName(cardInfo?.lastName ?? "");
+    setZip(cardInfo?.zip ?? "");
+    setBillingAddress(cardInfo?.billingAddress ?? "");
+  }
+
+  // layout effects run before the component's added to DOM
+  useLayoutEffect(init, [cardInfo]);
 
   return (
     <BaseEntry className="card"
@@ -29,7 +43,7 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
       }}
       onCancel={() => {
         setUnsaved(false);
-        setCardNumber(cardInfo?.cardNumber ?? ""); setCVV(cardInfo?.cvv ?? ""); setExpiration(cardInfo?.expiration ?? ""); setBank(cardInfo?.bank); setFirstName(cardInfo?.firstName ?? ""); setLastName(cardInfo?.lastName ?? ""); setZip(cardInfo?.zip ?? ""); setBillingAddress(cardInfo?.billingAddress ?? "");
+        init();
       }}
       onDelete={async () => {
         setUnsaved(true);
