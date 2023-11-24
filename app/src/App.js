@@ -38,7 +38,7 @@ const Router = () => {
                 {id: "1", application: "an item!", username: "user1", password: "password1"},
                 {id: "2", application: "another item!", username: "user2", password: "pass2"},
               ], 1000)}
-            element={<Entries DefaultEntryKind={LoginEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
+            element={<Entries key="logins" DefaultEntryKind={LoginEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
           <Route path="/notes"
             loader={doAuthFetch(cookies.token, "/api/secure-notes", {},
@@ -46,7 +46,7 @@ const Router = () => {
                 {id: "1", type: "secureNote", title: "A secure note! Not really.", text: "Lorem ipsum dolor sit amet, or whatever."},
                 {id: "2", type: "secureNote", title: "Another fake secure note!", text: "Lorem ipsum dolor sit amet II, or whatever."},
               ], 1000)}
-            element={<Entries DefaultEntryKind={SecureNoteEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
+            element={<Entries key="notes" DefaultEntryKind={SecureNoteEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
           <Route path="/cards"
             loader={doAuthFetch(cookies.token, "/api/cards", {},
@@ -54,7 +54,7 @@ const Router = () => {
                 {id: "1", type: "card", cardNumber: "1234567890123456", firstName: "Cardholder", lastName: "One", cvv: "111", expiration: "2025-01", bank: "Bank of Cardholding"},
                 {id: "2", type: "card", cardNumber: "2345678901234561", firstName: "Cardholder", lastName: "Two", cvv: "222", expiration: "2025-02", bank: "Cardholders Inc"},
               ], 1000)}
-            element={<Entries DefaultEntryKind={CardEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
+            element={<Entries key="cards" DefaultEntryKind={CardEntry} devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
           <Route path="/logout" element={<Logout />} />
         </Route>
