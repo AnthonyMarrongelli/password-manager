@@ -6,7 +6,7 @@ import {useCookies} from "react-cookie";
 
 const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
   const [editable, setEditable] = useState(!cardInfo);
-  const [unsaved, setUnsaved] = useState(false);
+  const [unsaved, setUnsaved] = useState(!cardInfo);
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCVV] = useState("");
   const [expiration, setExpiration] = useState("");
@@ -37,8 +37,8 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
       subtitle={(cardNumber.length > 4 ? "*".repeat(cardNumber.length - 4) : "") + cardNumber.slice(-4)}
       isNew={!cardInfo} isEmpty={!(cardNumber || cvv || expiration || bank || firstName || lastName || zip || billingAddress)}
       editable={editable} setEditable={setEditable} editing={unsaved} onEdit={() => setUnsaved(true)} onSave={async () => {
-        const newCard = await authFetch(cookies, cardInfo.id ? "/server/card/update/" + cardInfo.id : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress}},
-          devMode, {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, id: cardInfo?.id ?? ""+Math.random()}, 1000);
+        const newCard = await authFetch(cookies, cardInfo?.id ? "/server/card/update" : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id}},
+          devMode, {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id ?? ""+Math.random()}, 1000);
         setUnsaved(false);
         onSave(newCard);
       }}

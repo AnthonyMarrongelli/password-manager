@@ -10,9 +10,6 @@ import {authFetch} from "./auth.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
 import PasswordReset from "./pages/PasswordReset.js";
-import SecureNoteEntry from "./components/SecureNoteEntry.js";
-import LoginEntry from "./components/LoginEntry.js";
-import CardEntry from "./components/CardEntry.js";
 
 const doAuthFetch = (token, ...args) => async () => token ? defer({items: authFetch(token, ...args)}) : null;
 

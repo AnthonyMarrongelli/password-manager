@@ -7,7 +7,7 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
   const [editable, setEditable] = useState(!noteInfo);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [unsaved, setUnsaved] = useState(false);
+  const [unsaved, setUnsaved] = useState(!noteInfo);
   const [cookies] = useCookies(["token", "userid"]);
 
   const init = () => {
@@ -22,8 +22,8 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
       title={title}
       isNew={!noteInfo} isEmpty={!(title || text)}
       editable={editable} setEditable={setEditable} editing={unsaved} onEdit={() => setUnsaved(true)} onSave={async () => {
-        const newNote = await authFetch(cookies, noteInfo?.id ? "/server/note/update/" + noteInfo.id : "/server/note/create", {body: {title, text}},
-          devMode, {title, text, id: noteInfo?.id ?? ""+Math.random()}, 1000);
+        const newNote = await authFetch(cookies, noteInfo?.id ? "/server/note/update" : "/server/note/create", {body: {title, text, _id: noteInfo?.id}},
+          devMode, {title, text, _id: noteInfo?.id ?? ""+Math.random()}, 1000);
         setUnsaved(false);
         onSave(newNote);
       }}
