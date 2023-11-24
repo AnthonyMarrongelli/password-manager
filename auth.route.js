@@ -57,6 +57,9 @@ router.post('/signin', async (request, response, next) => {
         const currentUser = await User.findOne({email});
         if(currentUser) {
 
+            //Check for verification
+            if(currentUser.verified == false) return next(customError.errorHandler(403, 'User not verified!')); //Send out cutom error
+
             //Compare the password against the stored one
             if(bcryptjs.compareSync(password, currentUser.password)) {
 
@@ -76,8 +79,10 @@ router.post('/signin', async (request, response, next) => {
 
                 console.log("Sign-In Successful!");
 
+            //Password did not match
             } else return next(customError.errorHandler(401, 'Incorrect email or password!')); //Send out cutom error
 
+        //User did not exist
         } else return next(customError.errorHandler(404, 'This user does not exist!')); //Send out cutom error
     
     // Catch try block error and pass it to the middleware
@@ -127,6 +132,47 @@ router.post('/resetPassword', async (request, response, next) => {
         } else return next(customError.errorHandler(404, 'This user does not exist!')); //Send out cutom error
 
     // Catch errors from try block and pass to middleware
+    } catch(error) { next(error); }
+
+});
+
+
+/* ----------Verify Account API---------- */
+// Set this user as a validated user if their link key matches their saved key
+router.post('/verifyAccount', async (request, response, next) => {
+    try {
+        // Collate data
+        const { userID, verificationKey } = request.body;
+        if(!verificationKey || !userID) return next(customError.errorHandler(401, 'Bad link')); //Ensure the verificationKey and userID actually exist
+
+        //Look up user
+        const currentUser = await User.findById({"_id": userID});
+
+        // User exists
+        if(currentUser) {
+            // Keys matched
+            if(bcryptjs.compareSync(request.params.verificationKey, currentUser.emailKey)) {
+                
+                // Verify the user by updating their "verified" field
+                await User.findByIdAndUpdate(passedID, {$set: {verified: true}});
+
+                // Send out response
+                response
+                    .status(200) // 200 is successful response code
+                    .json({
+                        message: "User verified! Redirecting to Home page..."
+                    });
+                    
+
+                console.log("Verified!");
+
+            // Keys did not match
+            } else return next(customError.errorHandler(401, 'Bad link')); //Send out cutom error
+
+        // User does not exist
+        } else return next(customError.errorHandler(404, 'This user does not exist!')); //Send out cutom error
+
+    // Catch try block errors
     } catch(error) { next(error); }
 
 });
@@ -201,44 +247,6 @@ router.post('/sendPassEmail/', async (request, response, next) => {
 });
 
 
-/* ----------Verify Account API---------- */
-// Set this user as a validated user if their link key matches their saved key
-router.post('/verifyAccount/:id/:verificationKey', async (request, response, next) => {
-    try {
-        // Look up the user
-        const passedID = request.params.id;
-        const currentUser = await User.findById({"_id": passedID});
-
-        // User exists
-        if(currentUser) {
-            // Keys matched
-            if(bcryptjs.compareSync(request.params.verificationKey, currentUser.emailKey)) {
-                
-                // Verify the user by updating their "verified" field
-                await User.findByIdAndUpdate(passedID, {$set: {verified: true}});
-
-                // Send out response
-                response
-                    .status(200) // 200 is successful response code
-                    .json({
-                        message: "User verified! Redirecting to Home page..."
-                    });
-                    
-
-                console.log("Verified!");
-
-            // Keys did not match
-            } else return next(customError.errorHandler(401, 'Bad link')); //Send out cutom error
-
-        // User does not exist
-        } else return next(customError.errorHandler(404, 'This user does not exist!')); //Send out cutom error
-
-    // Catch try block errors
-    } catch(error) { next(error); }
-
-});
-
-
 /* Send Verification Email Function */
 // Send the user an email with a link to verify their account
 const sendVerificationEmail = async ({_id, email, username}, next) => {
@@ -259,7 +267,7 @@ const sendVerificationEmail = async ({_id, email, username}, next) => {
 
         sendSmtpEmail.htmlContent = 
             `<p>Please click the link below to verify your account and begin buffing your security with RetroVault.</p>
-            <p><a href=${"http://localhost:3005/server/auth/verify/" + _id + "/" + verificationKey}>Verify Me!</a></p>`;
+            <p><a href=${"http://localhost:3000/accountVerification?user=" + _id + "&verificationKey=" + verificationKey}>Verify Me!</a></p>`;
 
         sendSmtpEmail.sender = 
         {
