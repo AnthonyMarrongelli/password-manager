@@ -4,25 +4,35 @@ import {debugFetch} from "../auth.js";
 
 export const EmailForm = ({devMode}) => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [emailSent, setEmailSent] = useState(false);
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
-    const response = await debugFetch("/api/signup-email", {body: {email}}, devMode, {success: true}, 1000);
+    const response = await debugFetch("/server/auth/signup", {body: {username, email, password}}, devMode, {success: true, user: {username, email, password}, message: "User created! Returned information on the new user."}, 1000);
     setEmailSent(true);
     // uhhh do something.
   }}>
     <h1>Hi there.</h1>
     {emailSent
       ? <>
-        <p>A confirmation email has been sent to&nbsp;<b>{email}</b>.</p>
-        <button type="submit">Resend</button><button type="button" onClick={e => {e.preventDefault(); setEmailSent(false);}}>Change email</button>
+        <p>Great! We've sent a confirmation email to&nbsp;<b>{email}</b>. You can close this tab now.</p>
+        <button type="submit">Resend</button><button type="button" onClick={e => {e.preventDefault(); setEmailSent(false);}}>Return</button>
       </>
       : <>
-        <p>First, we need to make sure you have a valid email...</p>
+        <p>Let's get you signed up.</p>
         <label>
-          {emailSent ? "" : "Email"}
-          <input type={emailSent ? "hidden" : "email"} value={email} onChange={e => setEmail(e.currentTarget.value)} required />
+          Email
+          <input type="email" value={email} onChange={e => setEmail(e.currentTarget.value)} required />
+        </label>
+        <label>
+          Username
+          <input type="text" value={username} onChange={e => setUsername(e.currentTarget.value)} required />
+        </label>
+        <label>
+          Password
+          <input type="password" value={password} onChange={e => setPassword(e.currentTarget.value)} required />
         </label>
         <button type="submit">Send confirmation email</button>
       </>}

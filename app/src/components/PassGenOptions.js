@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 
-const PassGenOptions = ({onSubmit, defaults, disabled}) => {
+const PassGenOptions = ({onSubmit, defaults}) => {
   const [length, setLength] = useState(defaults.length ?? 12);
   const [numbers, setNumbers] = useState(defaults.numbers ?? true);
   const [symbols, setSymbols] = useState(defaults.symbols ?? true);
@@ -14,31 +14,31 @@ const PassGenOptions = ({onSubmit, defaults, disabled}) => {
   return (
     <form className="pass-gen" onSubmit={e => {e.preventDefault(); onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict});}}>
       <label>
-        Length: <input type="number" min="1" max="99" step="1" value={length} onChange={e => setLength(+e.currentTarget.value)} disabled={disabled} />
+        Length: <input type="number" min="1" max="99" step="1" value={length} onChange={e => setLength(+e.currentTarget.value)} />
       </label>
       <label>
-        Numbers: <input type="checkbox" checked={numbers} onChange={e => setNumbers(e.currentTarget.checked)} disabled={disabled} />
+        Numbers: <input type="checkbox" checked={numbers} onChange={e => setNumbers(e.currentTarget.checked)} />
       </label>
       <label>
-        Symbols: <input type="checkbox" checked={symbols} onChange={e => setSymbols(e.currentTarget.checked)} disabled={disabled} />
+        Symbols: <input type="checkbox" checked={symbols} onChange={e => setSymbols(e.currentTarget.checked)} />
       </label>
       <label>
-        Lowercase: <input type="checkbox" checked={lowercase} onChange={e => setLowercase(e.currentTarget.checked)} disabled={disabled} />
+        Lowercase: <input type="checkbox" checked={lowercase} onChange={e => setLowercase(e.currentTarget.checked)} />
       </label>
       <label>
-        Uppercase: <input type="checkbox" checked={uppercase} onChange={e => setUppercase(e.currentTarget.checked)} disabled={disabled} />
+        Uppercase: <input type="checkbox" checked={uppercase} onChange={e => setUppercase(e.currentTarget.checked)} />
       </label>
       <label>
-        Exclude similar: <input type="checkbox" checked={excludeSimilarCharacters} onChange={e => setExcludeSimilarCharacters(e.currentTarget.checked)} disabled={disabled} />
+        Exclude similar: <input type="checkbox" checked={excludeSimilarCharacters} onChange={e => setExcludeSimilarCharacters(e.currentTarget.checked)} />
       </label>
       <label>
-        Exclude custom: <input type="text" value={exclude} onChange={e => setExclude(e.currentTarget.value)} disabled={disabled} />
+        Exclude custom: <input type="text" value={exclude} onChange={e => setExclude(e.currentTarget.value)} />
       </label>
       <label>
-        Include characters from every group: <input type="checkbox" checked={strict} onChange={e => setStrict(e.currentTarget.checked)} disabled={disabled} />
+        Include characters from every group: <input type="checkbox" checked={strict} onChange={e => setStrict(e.currentTarget.checked)} />
       </label>
 
-      <button type="submit" disabled={disabled}>Generate</button>
+      <button type="submit">Generate</button>
     </form>
   )
 };

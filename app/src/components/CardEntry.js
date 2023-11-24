@@ -1,50 +1,62 @@
 import React, {useState} from "react";
 import BaseEntry from "./BaseEntry.js";
 import CopyableInput, {CardInput} from "./CopyableInput.js";
+import {authFetch} from "../auth.js";
+import {useCookies} from "react-cookie";
 
-const CardEntry = ({cardInfo}) => {
-  const [editable, setEditable] = useState(false);
-  const [cardNumber, setCardNumber] = useState(cardInfo.cardNumber ?? "");
-  const [cvv, setCVV] = useState(cardInfo.cvv ?? "");
-  const [expiration, setExpiration] = useState(cardInfo.expiration ?? "");
-  const [bank, setBank] = useState(cardInfo.bank ?? "");
-  const [firstName, setFirstName] = useState(cardInfo.firstName ?? "");
-  const [lastName, setLastName] = useState(cardInfo.lastName ?? "");
-  const [zip, setZip] = useState(cardInfo.zip ?? "");
-  const [billingAddress, setBillingAddress] = useState(cardInfo.billingAddress ?? "");
+const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
+  const [unsaved, setUnsaved] = useState(false);
+  const [cardNumber, setCardNumber] = useState(cardInfo?.cardNumber ?? "");
+  const [cvv, setCVV] = useState(cardInfo?.cvv ?? "");
+  const [expiration, setExpiration] = useState(cardInfo?.expiration ?? "");
+  const [bank, setBank] = useState(cardInfo?.bank ?? "");
+  const [firstName, setFirstName] = useState(cardInfo?.firstName ?? "");
+  const [lastName, setLastName] = useState(cardInfo?.lastName ?? "");
+  const [zip, setZip] = useState(cardInfo?.zip ?? "");
+  const [billingAddress, setBillingAddress] = useState(cardInfo?.billingAddress ?? "");
+  const [cookies] = useCookies(["token", "userid"]);
 
   return (
     <BaseEntry className="card"
       title={bank}
       subtitle={(cardNumber.length > 4 ? "*".repeat(cardNumber.length - 4) : "") + cardNumber.slice(-4)}
-      editing={editable} onEdit={() => setEditable(true)} onSave={() => {
-        setEditable(false);
-        // TODO
+      isNew={!cardInfo} isEmpty={!(cardNumber || cvv || expiration || bank || firstName || lastName || zip || billingAddress)}
+      editing={unsaved} onEdit={() => setUnsaved(true)} onSave={async () => {
+        const newCard = await authFetch(cookies, cardInfo.id ? "/server/card/update/" + cardInfo.id : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress}},
+          devMode, {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, id: cardInfo?.id ?? ""+Math.random()}, 1000);
+        setUnsaved(false);
+        onSave(newCard);
       }}
       onCancel={() => {
-        setEditable(false);
-        setCardNumber(cardInfo.cardNumber); setCVV(cardInfo.cvv); setExpiration(cardInfo.expiration); setBank(cardInfo.bank); setFirstName(cardInfo.firstName); setLastName(cardInfo.lastName); setZip(cardInfo.zip); setBillingAddress(cardInfo.billingAddress);
+        setUnsaved(false);
+        setCardNumber(cardInfo?.cardNumber ?? ""); setCVV(cardInfo?.cvv ?? ""); setExpiration(cardInfo?.expiration ?? ""); setBank(cardInfo?.bank); setFirstName(cardInfo?.firstName ?? ""); setLastName(cardInfo?.lastName ?? ""); setZip(cardInfo?.zip ?? ""); setBillingAddress(cardInfo?.billingAddress ?? "");
+      }}
+      onDelete={async () => {
+        setUnsaved(true);
+        if (cardInfo) await authFetch(cookies, "/server/pass/delete/" + cardInfo.id, {body: {}},
+          devMode, {}, 1000);
+        onDelete();
       }}
     >
       <label>
-        Name: <input type="text" required placeholder="Firstname" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} disabled={!editable} /> <input type="text" required placeholder="Lastname" value={lastName} onChange={e => setLastName(e.currentTarget.value)} disabled={!editable} />
+        Name: <input type="text" required placeholder="Firstname" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} /> <input type="text" required placeholder="Lastname" value={lastName} onChange={e => setLastName(e.currentTarget.value)} />
       </label>
       <label>
-        Bank: <input type="text" required value={bank} onChange={e => setBank(e.currentTarget.value)} disabled={!editable} />
+        Bank: <input type="text" required value={bank} onChange={e => setBank(e.currentTarget.value)} />
       </label>
       <label>
-        Card number: <CardInput text={cardNumber} onChange={setCardNumber} disabled={!editable} />
+        Card number: <CardInput text={cardNumber} onChange={setCardNumber} />
       </label>
       <label>
-        CVV: <CopyableInput inputMode="numeric" maskable minLength={3} maxLength={3} required text={cvv} onChange={setCVV} disabled={!editable} />
+        CVV: <CopyableInput inputMode="numeric" maskable minLength={3} maxLength={3} required text={cvv} onChange={setCVV} />
       </label>
       <label>
-        Expiration: <input type="month" required pattern="\d{4}-\d{2}" value={expiration} onChange={e => setExpiration(e.currentTarget.value)} disabled={!editable} />
+        Expiration: <input type="month" required pattern="\d{4}-\d{2}" value={expiration} onChange={e => setExpiration(e.currentTarget.value)} />
       </label>
       <label>
-        Billing address: <input type="text" value={billingAddress} onChange={e => setBillingAddress(e.currentTarget.value)} disabled={!editable} />
+        Billing address: <input type="text" value={billingAddress} onChange={e => setBillingAddress(e.currentTarget.value)} />
         <label>
-          Zip: <input type="text" minLength={5} maxLength={5} inputMode="numeric" value={zip} onChange={e => setZip(e.currentTarget.value)} disabled={!editable} />
+          Zip: <input type="text" minLength={5} maxLength={5} inputMode="numeric" value={zip} onChange={e => setZip(e.currentTarget.value)} />
         </label>
       </label>
     </BaseEntry>

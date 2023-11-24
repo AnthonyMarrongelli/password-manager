@@ -11,5 +11,5 @@ export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback,
   }).then(res => {if (res.ok) return res.json(); throw res;});
 };
 
-export const authFetch = (auth, url, {headers={}, ...options}, devMode, debugFallback, debugWait = 0) =>
-  debugFetch(url, {...options, headers: {...headers, "Authorization": auth.token_type + " " + auth.access_token}}, devMode, debugFallback, debugWait);
+export const authFetch = ({token="", userid=""}, url, {body, ...options}, devMode, debugFallback, debugWait = 0) =>
+  debugFetch(url, {...options, body: {...body, token, userid}}, devMode, debugFallback, debugWait);

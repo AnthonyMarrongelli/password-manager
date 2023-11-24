@@ -1,20 +1,20 @@
 import React, {useState} from "react";
 
-const BaseEntryCell = ({copyText, children, className=""}) => (
+const BaseCopyableInput = ({copyText, children, className=""}) => (
   <span className={"entry-input " + className}>
     {children}
-    {copyText && <button type="button" onClick={() => { navigator.clipboard.writeText(copyText); }}>[Copy]</button>}
+    <button type="button" onClick={() => { navigator.clipboard.writeText(copyText); }}>[Copy]</button>
   </span>
 );
 
-const CardInput = ({text, disabled, onChange}) => {
+const CardInput = ({text, disabled=false, onChange}) => {
   const [masked, setMasked] = useState(true);
 
   return (
-    <BaseEntryCell copyText={text}>
+    <BaseCopyableInput copyText={text}>
       <input type="text" className={masked ? "masked" : ""} disabled={disabled} readOnly={masked} value={masked && text.length > 4 ? "•".repeat(text.length - 4) + text.slice(-4) : text} inputMode="numeric" onChange={e => onChange(e.currentTarget.value)} required />
       <button type="button" onClick={() => setMasked(!masked)}>[Show/Hide]</button>
-    </BaseEntryCell>
+    </BaseCopyableInput>
   )
 }
 
@@ -22,10 +22,10 @@ const CopyableInput = ({text, inputMode="text", maskable=false, disabled=false, 
   const [masked, setMasked] = useState(maskable);
 
   return (
-    <BaseEntryCell copyText={text}>
+    <BaseCopyableInput copyText={text}>
       <input type={masked ? "password" : "text"} inputMode={inputMode} className={masked ? "masked" : ""} disabled={disabled} value={text} onChange={e => onChange(e.currentTarget.value)} minLength={minLength} maxLength={maxLength} required={required} />
       {maskable && <button type="button" onClick={() => setMasked(!masked)}>[Show/Hide]</button>}
-    </BaseEntryCell>
+    </BaseCopyableInput>
   );
 }
 

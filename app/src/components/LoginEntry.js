@@ -3,39 +3,51 @@ import BaseEntry from "./BaseEntry.js";
 import CopyableInput from "./CopyableInput.js";
 import {generate} from "generate-password-browser";
 import PassGenOptions from "./PassGenOptions.js";
+import {authFetch} from "../auth.js";
+import {useCookies} from "react-cookie";
 
-const LoginEntry = ({loginInfo}) => {
-  const [application, setApplication] = useState(loginInfo.application);
-  const [username, setUsername] = useState(loginInfo.username);
-  const [password, setPassword] = useState(loginInfo.password);
-  const [editable, setEditable] = useState(false);
+const LoginEntry = ({passInfo, onSave, onDelete, devMode}) => {
+  const [application, setApplication] = useState(passInfo?.application ?? "");
+  const [username, setUsername] = useState(passInfo?.username ?? "");
+  const [password, setPassword] = useState(passInfo?.password ?? "");
+  const [unsaved, setUnsaved] = useState(!passInfo);
+  const [cookies] = useCookies(["token", "userid"]);
 
   return (
-    <BaseEntry key={loginInfo.key} className="login"
+    <BaseEntry key={passInfo?.id} className="login"
       title={application}
       subtitle={username}
-      editing={editable} onEdit={() => setEditable(true)} onSave={() => {
-        setEditable(false);
-        // TODO
+      isNew={!passInfo} isEmpty={!(username || password || application)}
+      editing={unsaved} onEdit={() => {setUnsaved(true)}} onSave={async () => {
+        const newPass = await authFetch(cookies, passInfo?.id ? "/server/pass/update/" + passInfo.id : "/server/pass/create", {body: {username, password, application}},
+          devMode, {username, password, application, id: passInfo?.id ?? ""+Math.random()}, 1000);
+        setUnsaved(false);
+        onSave(newPass);
       }}
       onCancel={() => {
-        setEditable(false);
-        setApplication(loginInfo.application); setUsername(loginInfo.username); setPassword(loginInfo.password);
+        setApplication(passInfo.application); setUsername(passInfo.username); setPassword(passInfo.password);
+        setUnsaved(false);
+      }}
+      onDelete={async () => {
+        setUnsaved(true);
+        if (passInfo) await authFetch(cookies, "/server/pass/delete/" + passInfo.id, {body: {}},
+          devMode, {}, 1000);
+        onDelete();
       }}
     >
       <label>
-        Application: <input type="text" required value={application} onChange={e => setApplication(e.currentTarget.value)} disabled={!editable} />
+        Application: <input type="text" required value={application} onChange={e => setApplication(e.currentTarget.value)} />
       </label>
       <label>
-        Username: <CopyableInput text={username} onChange={setUsername} disabled={!editable} />
+        Username: <CopyableInput text={username} onChange={setUsername} />
       </label>
       <label>
-        Password: <CopyableInput text={password} onChange={setPassword} maskable disabled={!editable} />
+        Password: <CopyableInput text={password} onChange={setPassword} maskable />
       </label>
-      {editable && (
+      {unsaved && (
         <details>
           <summary>Password generator</summary>
-          <PassGenOptions defaults={{}} onSubmit={options => setPassword(generate(options))} disabled={!editable} />
+          <PassGenOptions defaults={{}} onSubmit={options => setPassword(generate(options))} />
         </details>
       )}
     </BaseEntry>
