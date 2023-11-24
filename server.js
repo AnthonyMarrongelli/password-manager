@@ -12,8 +12,8 @@ main().catch(err => console.log(err));
 async function main() {
 	/* ----------Connect to Database---------- */
 	//Connect to the server and act based on the reported status
-	await mongoose.connect("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority");
-	const db = mongoose.createConnection("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority")
+	await mongoose.connect(process.env.MONGO_CON);
+	const db = mongoose.createConnection(process.env.MONGO_CON)
 
 		db.on('error', console.error.bind(console, "Connection error:"))
 
