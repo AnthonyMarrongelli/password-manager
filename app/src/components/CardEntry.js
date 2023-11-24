@@ -21,7 +21,7 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
     setCardNumber(cardInfo?.cardNumber ?? "");
     setCVV(cardInfo?.cvv ?? "");
     setExpiration(cardInfo?.expiration ?? "");
-    setBank(cardInfo?.bank);
+    setBank(cardInfo?.bank ?? "");
     setFirstName(cardInfo?.firstName ?? "");
     setLastName(cardInfo?.lastName ?? "");
     setZip(cardInfo?.zip ?? "");

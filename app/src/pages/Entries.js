@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Await, Link, useLoaderData} from "react-router-dom";
+import React, {useLayoutEffect, useState} from "react";
+import {Await, Form, Link, useLoaderData, useSearchParams} from "react-router-dom";
 import LoginEntry from "../components/LoginEntry.js";
 import SecureNoteEntry from "../components/SecureNoteEntry.js";
 import CardEntry from "../components/CardEntry.js";
@@ -24,16 +24,29 @@ const appendEntry = (entries, setEntries, type) => (newItem) => {
 const EntriesList = ({items, devMode, defaultType}) => {
   const [entries, setEntries] = useState(items);
 
+  // why is this necessary.
+  useLayoutEffect(() => setEntries(items), [items]);
+
   /** @type {*} */
   const DefaultEntryKind = defaultType === "secureNote" ? SecureNoteEntry : defaultType === "card" ? CardEntry : LoginEntry;
 
-  return entries.map((item, i) => {
+  return <>{entries.map((item, i) => {
     switch (item.type) {
       case "secureNote": return <SecureNoteEntry noteInfo={item} key={item.id} onSave={updateEntry(entries, setEntries, i, item.type)} onDelete={deleteEntry(entries, setEntries, i)} devMode={devMode} />;
       case "card": return <CardEntry cardInfo={item} key={item.id} onSave={updateEntry(entries, setEntries, i, item.type)} onDelete={deleteEntry(entries, setEntries, i)} devMode={devMode} />;
       default: return <LoginEntry passInfo={item} key={item.id} onSave={updateEntry(entries, setEntries, i, item.type)} onDelete={deleteEntry(entries, setEntries, i)} devMode={devMode} />;
     }
-  }).concat(<DefaultEntryKind onSave={appendEntry(entries, setEntries, defaultType)} devMode={devMode} />);
+  }).concat(<DefaultEntryKind onSave={appendEntry(entries, setEntries, defaultType)} devMode={devMode} />)}</>;
+}
+
+const Searchbar = () => {
+  const [params] = useSearchParams();
+  const [query, setQuery] = useState(params.get("q") ?? "");
+
+  return <Form className="search">
+    <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} />
+    <button type="submit">[Search]</button>
+  </Form>
 }
 
 const Entries = ({defaultType, onEnterDevMode, devMode}) => {
@@ -44,17 +57,22 @@ const Entries = ({defaultType, onEnterDevMode, devMode}) => {
     <p>You need to be logged in to see this page. <Link to="/">Go back home</Link></p>
   </div>
 
-  return <div className="entry-list">
-    <React.Suspense fallback={<div className="loader">Loading...</div>}>
-      <Await
-        resolve={loaderData.items}
-        errorElement={<span className="error-message">Couldn't load anything...{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</span>}
-        children={(items) => items.length
-          ? <EntriesList defaultType={defaultType} items={items.map(simplifyEntry)} devMode={devMode} />
-          : <>No entries yet!</>}
-      />
-    </React.Suspense>
-  </div>
+  return (
+    <>
+      <Searchbar />
+      <div className="entry-list">
+        <React.Suspense fallback={<div className="loader">Loading...</div>}>
+          <Await
+            resolve={loaderData.items}
+            errorElement={<span className="error-message">Couldn't load anything...{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</span>}
+            children={(items) => items.length
+              ? <EntriesList defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />
+              : <>No entries yet!</>}
+          />
+        </React.Suspense>
+      </div>
+    </>
+  )
 }
 
 export default Entries;

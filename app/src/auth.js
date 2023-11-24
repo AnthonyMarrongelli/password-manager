@@ -1,5 +1,4 @@
 export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback, debugWait = 0) => {
-  console.log("devMode:", devMode);
   if (devMode)
     return debugFallback
       ? new Promise(res => setTimeout(() => res(debugFallback), debugWait))

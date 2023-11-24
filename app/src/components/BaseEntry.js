@@ -27,7 +27,6 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
     }
   }
   const del = async () => {
-    console.log("deleting!")
     setActuallyDeleting(true);
     if (isNew) {
       onCancel();
