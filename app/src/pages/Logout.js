@@ -8,7 +8,7 @@ const Logout = () => {
 
   useEffect(() => {
     deleteCookie("token");
-    navigate("/", {replace: true});
+    navigate("/sign-in", {replace: true});
   });
 
   return <>Logging you out...</>

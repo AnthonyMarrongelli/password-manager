@@ -14,21 +14,22 @@ const BaseEntry = ({children, className="", editing, onEdit, onSave, onCancel, t
           <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || editing}>[Collapse/Expand]</button>
         </span>
       </header>
-      <div>
+      <form onSubmit={e => { e.preventDefault(); onSave(); }}>
         {children}
         <div className="edit-controls">
           {
             editing
             ? <>
               <button type="button" onClick={() => { onCancel(); }}>[Cancel]</button>
-              <button type="button" onClick={() => { onSave(); }}>[Save]</button>
+              <button type="submit">[Save]</button>
             </>
             : <>
-              <button type="button" onClick={() => { setCollapsed(false); onEdit() }}>[Edit]</button>
+              <button type="button" onClick={() => { onEdit() }}>[Edit]</button>
+              <button type="button" onClick={() => { /* TODO */ }}>[Delete]</button>
             </>
           }
         </div>
-      </div>
+      </form>
     </li>
   );
 };

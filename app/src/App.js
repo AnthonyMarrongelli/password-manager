@@ -1,6 +1,6 @@
 import './App.css';
 import React, {useState} from "react";
-import {Route, RouterProvider, createBrowserRouter, createRoutesFromElements, defer} from "react-router-dom";
+import {Link, Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements, defer, redirect} from "react-router-dom";
 import {CookiesProvider, useCookies} from "react-cookie";
 import Entries from "./pages/Entries.js";
 import Index from "./pages/Index.js";
@@ -9,6 +9,7 @@ import Logout from "./pages/Logout.js";
 import {authFetch} from "./auth.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
+import PasswordReset from "./pages/PasswordReset.js";
 
 const doAuthFetch = (token, ...args) => async () => token ? defer({items: authFetch(token, ...args)}) : null;
 
@@ -20,11 +21,14 @@ const Router = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
+        <Route index loader={() => redirect(cookies.token ? "/landing" : "/sign-in")} />
+        <Route element={cookies.token ? <Navigate to="/landing" /> : <Index devMode={devMode} setDevMode={setDevMode} />}>
+          <Route path="/sign-in" element={<Login devMode={devMode} />} />
+          <Route path="/verify" element={<Signup devMode={devMode} />} />
+          <Route path="/pw-reset" element={<PasswordReset devMode={devMode} />} />
+        </Route>
         <Route element={cookies.token ? <Landing devMode={devMode} onLeaveDevMode={() => setDevMode(false)} /> : undefined}>
-          <Route element={cookies.token ? <>TODO</> : <Index devMode={devMode} setDevMode={setDevMode} />}>
-            <Route index element={<Login devMode={devMode} />} />
-            <Route path="/verify" element={<Signup devMode={devMode} />} />
-          </Route>
+          <Route path="/landing" element={<>TODO</>} />
           <Route path="/logins"
             loader={doAuthFetch(cookies.token, "/api/logins", {},
               devMode, [
@@ -51,7 +55,7 @@ const Router = () => {
           />
           <Route path="/logout" element={<Logout />} />
         </Route>
-        <Route path="/*" element={<>Whoops! Page not found.</>} />
+        <Route path="/*" element={<div className="error-page">Page not found. <Link to="/">Go back home</Link>?</div>} />
       </Route>
     )
   );

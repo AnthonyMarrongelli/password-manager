@@ -18,12 +18,12 @@ const CardInput = ({text, disabled, onChange}) => {
   )
 }
 
-const CopyableInput = ({text, maskable=false, disabled=false, onChange, maxLength=undefined, minLength=0, required=false}) => {
+const CopyableInput = ({text, inputMode="text", maskable=false, disabled=false, onChange, maxLength=-1, minLength=0, required=false}) => {
   const [masked, setMasked] = useState(maskable);
 
   return (
     <BaseEntryCell copyText={text}>
-      <input type={masked ? "password" : "text"} className={masked ? "masked" : ""} disabled={disabled} value={text} onChange={e => onChange(e.currentTarget.value)} minLength={minLength} maxLength={maxLength} required={required} />
+      <input type={masked ? "password" : "text"} inputMode={inputMode} className={masked ? "masked" : ""} disabled={disabled} value={text} onChange={e => onChange(e.currentTarget.value)} minLength={minLength} maxLength={maxLength} required={required} />
       {maskable && <button type="button" onClick={() => setMasked(!masked)}>[Show/Hide]</button>}
     </BaseEntryCell>
   );

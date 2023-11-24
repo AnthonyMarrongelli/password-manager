@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import BaseEntry from "./BaseEntry.js";
-import {CardInput} from "./CopyableInput.js";
+import CopyableInput, {CardInput} from "./CopyableInput.js";
 
 const CardEntry = ({cardInfo}) => {
   const [editable, setEditable] = useState(false);
@@ -36,10 +36,10 @@ const CardEntry = ({cardInfo}) => {
         Card number: <CardInput text={cardNumber} onChange={setCardNumber} disabled={!editable} />
       </label>
       <label>
-        CVV: <input type="password" inputMode="numeric" minLength={3} maxLength={3} required value={cvv} onChange={e => setCVV(e.currentTarget.value)} disabled={!editable} />
+        CVV: <CopyableInput inputMode="numeric" maskable minLength={3} maxLength={3} required text={cvv} onChange={setCVV} disabled={!editable} />
       </label>
       <label>
-        Expiration: <input type="month" required value={expiration} onChange={e => setExpiration(e.currentTarget.value)} disabled={!editable} />
+        Expiration: <input type="month" required pattern="\d{4}-\d{2}" value={expiration} onChange={e => setExpiration(e.currentTarget.value)} disabled={!editable} />
       </label>
       <label>
         Billing address: <input type="text" value={billingAddress} onChange={e => setBillingAddress(e.currentTarget.value)} disabled={!editable} />
