@@ -1,6 +1,5 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/auth.route.js')
 const emailRouter = require('./routes/email.route.js')
 const userRouter = require('./routes/user.route.js')
@@ -13,8 +12,8 @@ main().catch(err => console.log(err));
 async function main() {
 	/* ----------Connect to Database---------- */
 	//Connect to the server and act based on the reported status
-	await mongoose.connect(process.env.MONGO_CON);
-	const db = mongoose.createConnection(process.env.MONGO_CON)
+	await mongoose.connect("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority");
+	const db = mongoose.createConnection("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority")
 
 		db.on('error', console.error.bind(console, "Connection error:"))
 
@@ -33,7 +32,6 @@ async function main() {
 
 	//Specify format and tools
 	app.use(express.json());
-	app.use(cookieParser());
 
 	//Watch a port
 	app.listen(3005, () => {
