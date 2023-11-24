@@ -8,7 +8,7 @@ const verifyUser = (request, response, next) => {
 
     //Verify the token
     if(sessionToken) {
-        jwt.verify(sessionToken, 'thanatos', (err, currentUser) => {
+        jwt.verify(sessionToken, process.env.SECRET_KEY, (err, currentUser) => {
             if (err) return next(customError.errorHandler(401, 'Unauthorized!'));
 
             request.currentUser = currentUser;
