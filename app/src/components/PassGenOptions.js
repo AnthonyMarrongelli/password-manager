@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 
-const PassGenOptions = ({onSubmit, defaults}) => {
+const PassGenOptions = ({onSubmit, defaults, disabled=false}) => {
   const [length, setLength] = useState(defaults.length ?? 12);
   const [numbers, setNumbers] = useState(defaults.numbers ?? true);
   const [symbols, setSymbols] = useState(defaults.symbols ?? true);
@@ -12,7 +12,7 @@ const PassGenOptions = ({onSubmit, defaults}) => {
   const [strict, setStrict] = useState(defaults.strict ?? true);
 
   return (
-    <div className="pass-gen">
+    <fieldset className="pass-gen" disabled={disabled}>
       <label>
         Length: <input type="number" min="1" max="99" step="1" value={length} onChange={e => setLength(+e.currentTarget.value)} />
       </label>
@@ -39,7 +39,7 @@ const PassGenOptions = ({onSubmit, defaults}) => {
       </label>
 
       <button type="button" onClick={() => onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict})}>Generate</button>
-    </div>
+    </fieldset>
   )
 };
 

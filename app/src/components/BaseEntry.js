@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 
-const BaseEntry = ({children, className="", editing, onEdit, onSave, onCancel, onDelete, title="", subtitle="", isNew=false, isEmpty=false, error=""}) => {
+const BaseEntry = ({children, className="", editing, editable, setEditable, onEdit, onSave, onCancel, onDelete, title="", subtitle="", isNew=false, isEmpty=false, error=""}) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const [isDeleting, setDeleting] = useState(false);
-  const [editable, setEditable] = useState(isNew);
   const [saveError, setSaveError] = useState("");
   const [isActuallyDeleting, setActuallyDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -54,7 +53,7 @@ const BaseEntry = ({children, className="", editing, onEdit, onSave, onCancel, o
         </span>
       </header>
       <form onSubmit={e => {e.preventDefault(); submit()}}>
-        <fieldset disabled={!editable || isDeleting}>
+        <fieldset disabled={isDeleting}>
           {children}
         </fieldset>
         <fieldset className="edit-controls" disabled={isDeleting || (editing && !editable)}>
