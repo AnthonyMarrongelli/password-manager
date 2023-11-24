@@ -1,7 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const authRouter = require('./routes/auth.route.js')
-const emailRouter = require('./routes/email.route.js')
 const userRouter = require('./routes/user.route.js')
 const noteRouter = require('./routes/note.route.js')
 const cardRouter = require('./routes/card.route.js')
@@ -12,8 +11,8 @@ main().catch(err => console.log(err));
 async function main() {
 	/* ----------Connect to Database---------- */
 	//Connect to the server and act based on the reported status
-	await mongoose.connect(process.env.MONGO_CON);
-	const db = mongoose.createConnection(process.env.MONGO_CON)
+	await mongoose.connect("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority");
+	const db = mongoose.createConnection("mongodb+srv://fletch:rALCoov62gI14u3p@mern.r768fge.mongodb.net/mern?retryWrites=true&w=majority")
 
 		db.on('error', console.error.bind(console, "Connection error:"))
 
@@ -42,8 +41,6 @@ async function main() {
 	/* ----------API Routes---------- */
 	// Endpoints relating to user credentials
 	app.use("/server/auth", authRouter);
-	// Endpoints relating to emails
-	app.use("/server/email", emailRouter);
 	// Endpoints relating to user options
 	app.use("/server/user", userRouter);
 	// Endpoints relating to secure notes

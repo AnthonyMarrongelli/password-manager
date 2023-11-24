@@ -27,6 +27,12 @@ const userCredSchema = new mongoose.Schema({ // userid removed because the user'
         type: String,
         required: false,
     },
+    
+    resetKey:
+    {
+        type: String,
+        required: false,
+    },
 
     verified:
     {
