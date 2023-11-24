@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { debugFetch } from "../auth.js";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
 const PasswordResetForm = ({devMode}) => {
+  const [params] = useSearchParams();
+
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [password, setPassword] = useState("");
@@ -13,10 +15,18 @@ const PasswordResetForm = ({devMode}) => {
     else setPassword("");
   }, [password1, password2]);
 
+  if (!params.has("user") || !params.has("resetKey"))
+    return (
+      <div className="error-page">
+        Looks like you're missing part of the password reset link.
+        Try the link in the email you received again.
+      </div>
+    );
+
   return (
     <form onSubmit={async (e) => {
       e.preventDefault();
-      const response = await debugFetch("/api/pwreset", {body: {password}},
+      const response = await debugFetch("/server/auth/resetPassword", {body: {userID: params.get("user"), newPassword: password, resetKey: params.get("resetKey")}},
         devMode, {success: true}, 1000);
       navigate("/");
     }}>

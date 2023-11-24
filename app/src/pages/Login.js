@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {EmailForm} from "../components/EmailForm.js";
+import SignupForm from "../components/SignupForm.js";
 import LoginForm from "../components/LoginForm.js";
 import PasswordResetRequestForm from "../components/PasswordResetRequestForm.js";
 
@@ -12,7 +12,7 @@ const Login = ({devMode}) => {
       {
         isSignup
         ? <>
-          <EmailForm devMode={devMode} />
+          <SignupForm devMode={devMode} />
           <p>Already have an account? <button type="button" onClick={e => {e.preventDefault(); setSignup(false)}}>Log in</button>.</p>
           </>
         : isReset

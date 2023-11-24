@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {debugFetch} from "../auth.js";
 
 
-export const EmailForm = ({devMode}) => {
+const SignupForm = ({devMode}) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,3 +38,5 @@ export const EmailForm = ({devMode}) => {
       </>}
   </form>;
 };
+
+export default SignupForm;

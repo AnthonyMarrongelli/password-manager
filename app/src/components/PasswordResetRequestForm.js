@@ -8,9 +8,8 @@ export const PasswordRequestResetForm = ({devMode}) => {
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
-    const response = await debugFetch("/api/reset", {body: {email}}, devMode, {success: true}, 1000);
+    const response = await debugFetch("/server/auth/sendPassEmail", {body: {email}}, devMode, {success: true}, 1000);
     setEmailSent(true);
-    // uhhh do something.
   }}>
     <h1>Forgot your password?</h1>
     {emailSent

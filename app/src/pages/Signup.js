@@ -1,10 +1,10 @@
 import React from "react";
-import {LoginInfoForm} from "../components/LoginInfoForm.js";
+import VerificationForm from "../components/VerificationForm.js";
 
 const Login = ({devMode}) => {
   return (
     <div className="form signup">
-      <LoginInfoForm devMode={devMode} />
+      <VerificationForm devMode={devMode} />
     </div>
   );
 };
