@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useState} from "react";
-import {Await, Form, Link, useLoaderData, useSearchParams} from "react-router-dom";
+import {Await, Form, Link, useAsyncError, useLoaderData, useSearchParams} from "react-router-dom";
 import LoginEntry from "../components/LoginEntry.js";
 import SecureNoteEntry from "../components/SecureNoteEntry.js";
 import CardEntry from "../components/CardEntry.js";
@@ -49,6 +49,12 @@ const Searchbar = () => {
   </Form>
 }
 
+const ErrorMessage = ({onEnterDevMode}) => {
+  const error = useAsyncError();
+
+  return <><span className="error-message">{error+""}</span>{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</>
+}
+
 const Entries = ({defaultType, onEnterDevMode, devMode}) => {
   const [cookies] = useCookies(["token"]);
   const loaderData = /** @type {{items: object[]}} */ (useLoaderData());
@@ -64,10 +70,8 @@ const Entries = ({defaultType, onEnterDevMode, devMode}) => {
         <React.Suspense fallback={<div className="loader">Loading...</div>}>
           <Await
             resolve={loaderData.items}
-            errorElement={<span className="error-message">Couldn't load anything...{onEnterDevMode && <p style={{color: "#400", backgroundColor: "#fdd"}}>Try <button onClick={onEnterDevMode}>dev mode</button>?</p>}</span>}
-            children={(items) => items.length
-              ? <EntriesList defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />
-              : <>No entries yet!</>}
+            errorElement={<ErrorMessage onEnterDevMode={onEnterDevMode} />}
+            children={(items) => <EntriesList defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />}
           />
         </React.Suspense>
       </div>
