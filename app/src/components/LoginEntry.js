@@ -40,7 +40,7 @@ const LoginEntry = ({passInfo, onSave, onDelete, devMode}) => {
       }}
       onDelete={async () => {
         setUnsaved(true);
-        if (passInfo) await authFetch(cookies, "/server/pass/delete/" + passInfo.id, {body: {}},
+        if (passInfo) await authFetch(cookies, "/server/pass/delete", {body: {_id: passInfo.id}},
           devMode, {}, 1000);
         onDelete();
       }}
