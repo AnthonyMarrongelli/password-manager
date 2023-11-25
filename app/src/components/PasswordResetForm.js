@@ -8,6 +8,8 @@ const PasswordResetForm = ({devMode}) => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,11 +26,15 @@ const PasswordResetForm = ({devMode}) => {
     );
 
   return (
-    <form onSubmit={async (e) => {
+    <form onSubmit={(e) => {
       e.preventDefault();
-      const response = await debugFetch("/server/auth/resetPassword", {body: {userID: params.get("user"), newPassword: password, resetKey: params.get("resetKey")}},
-        devMode, {success: true}, 1000);
-      navigate("/");
+      debugFetch("/server/auth/resetPassword", {body: {userID: params.get("user"), newPassword: password, resetKey: params.get("resetKey")}},
+        devMode, {success: true}, 1000)
+      .then(response => {
+        navigate("/");
+      }, error => {
+        setError(error);
+      })
     }}>
       <h1>Let's get you a new password.</h1>
 
@@ -41,6 +47,7 @@ const PasswordResetForm = ({devMode}) => {
         <input type="password" value={password2} onChange={e => setPassword2(e.currentTarget.value)} required />
       </label>
       <button>Reset password</button>
+      {error && <p className="error-message">{error}</p>}
     </form>
   );
 };

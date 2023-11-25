@@ -6,12 +6,13 @@ import {Navigate, useSearchParams} from "react-router-dom";
 const VerificationForm = ({devMode}) => {
   const [params] = useSearchParams();
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (params.has("user") && params.has("verificationKey")) {
       debugFetch("/server/auth/verifyAccount", {body: {userID: params.get("user"), verificationKey: params.get("verificationKey")}},
         devMode, {message: "User verified! Redirecting to Home page..."}, 1000)
-      .then(() => setDone(true));
+      .then(() => setDone(true), error => setError(error));
     }
   }, [params, devMode]);
 
@@ -25,6 +26,7 @@ const VerificationForm = ({devMode}) => {
 
   if (done)
     return <Navigate to="/" replace />
+  else if (error) return <div className="error-page">{error}</div>
   else return (
     <div>
       Verifying...

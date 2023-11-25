@@ -41,7 +41,7 @@ const Router = () => {
           <Route path="/pw-reset" element={<PasswordReset devMode={devMode} />} />
         </Route>
         <Route element={cookies.token ? <Landing devMode={devMode} onLeaveDevMode={() => setDevMode(false)} /> : undefined}>
-          <Route path="/landing" element={<>TODO</>} />
+          <Route path="/landing" element={<Navigate to="/logins" replace />} />
           <Route path="/logins"
             loader={doAuthFetch(cookies.token, "/server/pass/list", {},
               devMode, keyword => [

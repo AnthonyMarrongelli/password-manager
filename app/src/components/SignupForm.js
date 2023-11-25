@@ -7,12 +7,13 @@ const SignupForm = ({devMode}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [emailSent, setEmailSent] = useState(false);
+  const [error, setError] = useState("");
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
-    const response = await debugFetch("/server/auth/signup", {body: {username, email, password}}, devMode, {success: true, user: {username, email, password}, message: "User created! Returned information on the new user."}, 1000);
-    setEmailSent(true);
-    // uhhh do something.
+    debugFetch("/server/auth/signup", {body: {username, email, password}}, devMode, {success: true, user: {username, email, password}, message: "User created! Returned information on the new user."}, 1000)
+    .then(response => setEmailSent(true),
+      error => setError(error));
   }}>
     <h1>Hi there.</h1>
     {emailSent
@@ -35,6 +36,7 @@ const SignupForm = ({devMode}) => {
           <input type="password" value={password} onChange={e => setPassword(e.currentTarget.value)} required />
         </label>
         <button type="submit">Send confirmation email</button>
+        {error && <p className="error-message">{error}</p>}
       </>}
   </form>;
 };
