@@ -20,6 +20,24 @@ const userCredSchema = new mongoose.Schema({ // userid removed because the user'
         type: String,
         required: true,
         //required: [true, "Please enter a password"]
+    },
+
+    emailKey:
+    {
+        type: String,
+        required: false,
+    },
+    
+    resetKey:
+    {
+        type: String,
+        required: false,
+    },
+
+    verified:
+    {
+        type: Boolean,
+        required: true,
     }
 })
 

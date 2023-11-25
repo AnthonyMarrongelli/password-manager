@@ -1,17 +1,17 @@
 /* Verify the session cookie and current user match */
 
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');                     //For cookie operations
 const customError = require('../util/customError.js');   //For handling custom errors
 
 const verifyUser = (request, response, next) => {
-    const sessionToken = request.cookies.session; //Get the user's session cookie
+    const sessionToken = request.body.session; //Get the user's session cookie
 
     //Verify the token
     if(sessionToken) {
-        jwt.verify(sessionToken, '[REDACTED SECRET KEY]', (err, currentUser) => {
+        jwt.verify(sessionToken, process.env.SECRET_KEY, (err, sessionUser) => {
             if (err) return next(customError.errorHandler(401, 'Unauthorized!'));
 
-            request.currentUser = currentUser;
+            request.sessionUser = sessionUser;
             next();
         })
 
