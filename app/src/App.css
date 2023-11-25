@@ -25,10 +25,27 @@
   background-color: #ddd;
   background-image: url("imgs/RV_BG_1_gray80.jpg");
 }
+@media screen and (max-width: 70rem) {
+  .login-page .side-image {
+    width: auto;
+    left: 0;
+    right: 0;
+    height: 20rem;
+    background-size: auto 80%;
+  }
+  .login-page .form-container {
+    width: auto;
+    left: 0;
+    height: auto;
+    top: 20rem;
+    min-height: calc(100vh - 20rem);
+    padding: 1rem 0;
+  }
+}
 .login-page .form-container .form {
   background-color: #fffe;
   backdrop-filter: blur(3px);
-  width: 30em;
+  width: min(30em, calc(100vw - 4em));
   padding: 2em;
 }
 .login-page .form-container .form > p:last-child {
