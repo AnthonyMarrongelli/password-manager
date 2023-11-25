@@ -1,5 +1,5 @@
 export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback, debugWait = 0) => {
-  const isDevelopment = window.location.hostname === "localhost" && process.env.NODE_ENV === "development";
+  const isDevelopment = /* window.location.hostname === "localhost" && */ process.env.NODE_ENV === "development";
   if (devMode)
     return debugFallback
       ? new Promise(res => setTimeout(() => res(debugFallback), debugWait))
@@ -22,7 +22,7 @@ export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback,
     } catch (e) {
       // we're probably POSTing to the wrong route, then.
       console.error(text, "when fetching", url);
-      throw "Unexpected response. Try again later." + (isDevelopment ? `(error "${e.message}" when fetching "${url}")` : "");
+      throw "Unexpected response. Try again later." + (isDevelopment ? `(error "${e.message}" when fetching "${url}"; full error ${text})` : "");
     }
     console.error(json, "when fetching", url);
     throw json.message + (isDevelopment ? `(error returned from server when fetching "${url}")` : "");
