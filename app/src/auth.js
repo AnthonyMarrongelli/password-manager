@@ -7,7 +7,7 @@ export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback,
   if (isDevelopment) {
     const editedURL = new URL(url);
     editedURL.port = "3005";
-    url = editedURL.toString();
+    //url = editedURL.toString();
   }
   return fetch(url, {
     method: "POST",
