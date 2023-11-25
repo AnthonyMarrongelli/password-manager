@@ -164,3 +164,7 @@
   width: 100%;
   resize: vertical;
 }
+
+.error-message, .error-page {
+  color: #700;
+}
