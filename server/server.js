@@ -1,6 +1,5 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/auth.route.js')
 const userRouter = require('./routes/user.route.js')
 const noteRouter = require('./routes/note.route.js')
@@ -12,8 +11,8 @@ main().catch(err => console.log(err));
 async function main() {
 	/* ----------Connect to Database---------- */
 	//Connect to the server and act based on the reported status
-	await mongoose.connect("[redacted]");
-	const db = mongoose.createConnection("[redacted]")
+	await mongoose.connect(process.env.MONGO_CON);
+	const db = mongoose.createConnection(process.env.MONGO_CON)
 
 		db.on('error', console.error.bind(console, "Connection error:"))
 
@@ -30,9 +29,8 @@ async function main() {
 	//Create the application
 	const app = express();
 
-	//Specify format
+	//Specify format and tools
 	app.use(express.json());
-	app.use(cookieParser());
 
 	//Watch a port
 	app.listen(3005, () => {
@@ -43,19 +41,23 @@ async function main() {
 	/* ----------API Routes---------- */
 	// Endpoints relating to user credentials
 	app.use("/server/auth", authRouter);
+	// Endpoints relating to user options
 	app.use("/server/user", userRouter);
+	// Endpoints relating to secure notes
 	app.use("/server/note", noteRouter);
+	// Endpoints relating to card logs
 	app.use("/server/card", cardRouter);
+	//Endpoints relating to password logs
 	app.use("/server/pass", passRouter);
 
 
 	/* ----------Middleware---------- */
-	//Master function to deal with errors in all the API routes instead of dealing with them on a per function basis
+	//Master function to deal with errors in all the API routes instead of dealing with them on a per case basis
 	app.use((err, request, response, next) => {
 		const statusCode = err.statusCode || 500; 					//Get the status from the error, or use a generic one
 		const message = err.message || 'Internal Server Error!'; 	//Get the message from the error, or use a generic one
 
-		//Return the error is a JSON
+		//Return the error as a JSON
 		return response.status(statusCode).json({
 			success: false,
 			statusCode,
@@ -63,18 +65,4 @@ async function main() {
 		})
 	});
 
-	// How to add new field (simple example)
-	
-	/*
-	const n = new UserLoginModel({
-		userid: 0,
-		email: "test@example.com",
-		password: "123",
-	})
-	
-	await n.save()
-	*/
-
-	// Closes the connection to DB instead of relying on timeout
-	db.close()
 }
