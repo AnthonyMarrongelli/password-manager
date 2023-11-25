@@ -48,7 +48,7 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
       }}
       onDelete={async () => {
         setUnsaved(true);
-        if (cardInfo) await authFetch(cookies, "/server/pass/delete/" + cardInfo.id, {body: {}},
+        if (cardInfo) await authFetch(cookies, "/server/pass/delete", {body: {_id: cardInfo.id}},
           devMode, {}, 1000);
         onDelete();
       }}

@@ -22,13 +22,13 @@ export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback,
     } catch (e) {
       // we're probably POSTing to the wrong route, then.
       console.error(text, "when fetching", url);
-      throw "Unexpected response. Try again later.";
+      throw "Unexpected response. Try again later." + (isDevelopment ? `(error "${e.message}" when fetching "${url}")` : "");
     }
     console.error(json, "when fetching", url);
-    throw json.message;
+    throw json.message + (isDevelopment ? `(error returned from server when fetching "${url}")` : "");
   }, err => {
     console.error(err, "when fetching", url);
-    throw "The server is not responding. Try again later.";
+    throw "The server is not responding. Try again later." + (isDevelopment ? `(network error "${err.message}" when fetching "${url}")` : "");
   });
 };
 
