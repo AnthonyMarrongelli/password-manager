@@ -33,7 +33,7 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
       }}
       onDelete={async () => {
         setUnsaved(true);
-        if (noteInfo) await authFetch(cookies, "/server/note/delete", {body: {_id: noteInfo.id}},
+        if (noteInfo) await authFetch(cookies, "/server/note/delete", {body: {_id: noteInfo.id}, method: "DELETE"},
           devMode, {}, 1000);
         onDelete();
       }}

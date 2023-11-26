@@ -71,7 +71,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
           }
         </fieldset>
         { isDeleting && <fieldset className="overlay">
-          <p>Really delete {title ? <b>title</b> : "this untitled entry"}?</p>
+          <p>Really delete {title ? <b>{title}</b> : "this untitled entry"}?</p>
           <fieldset className="edit-controls" disabled={isActuallyDeleting}>
             {deleteError && <span className="error-message">{deleteError}</span>}
             <button type="button" onClick={() => {setDeleting(false); if (editing) setEditable(true); setDeleteError("")}}>Cancel</button>
