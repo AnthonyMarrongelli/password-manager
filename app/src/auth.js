@@ -1,4 +1,4 @@
-export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback, debugWait = 0) => {
+export const debugFetch = (url, {body = {}, headers = {}, ...options}, devMode, debugFallback, debugWait = 0) => {
   const isDevelopment = /* window.location.hostname === "localhost" && */ process.env.NODE_ENV === "development";
   if (devMode)
     return debugFallback
@@ -11,6 +11,10 @@ export const debugFetch = (url, {body = {}, ...options}, devMode, debugFallback,
   }
   return fetch(url, {
     method: "POST",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
     ...options,
     body: JSON.stringify(body),
   }).then(async res => {
