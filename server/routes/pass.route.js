@@ -67,7 +67,7 @@ router.delete('/delete', userVerification.verifyUser, async (request, response, 
 
     try {
 
-        await PasswordLog.findByIdAndDelete(request.request._id);
+        await PasswordLog.findByIdAndDelete(request.body._id);
 
         //Report note deletion
         response
