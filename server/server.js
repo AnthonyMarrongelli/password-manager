@@ -5,6 +5,7 @@ const userRouter = require('./routes/user.route.js')
 const noteRouter = require('./routes/note.route.js')
 const cardRouter = require('./routes/card.route.js')
 const passRouter = require('./routes/pass.route.js')
+const path = require("path")
 
 main().catch(err => console.log(err));
 
@@ -37,6 +38,8 @@ async function main() {
 		console.log('Server is running on port 3005');
 	});
 
+	// serve static React files
+	app.use(express.static(path.join(__dirname, "../app/build")));
 
 	/* ----------API Routes---------- */
 	// Endpoints relating to user credentials
@@ -64,5 +67,10 @@ async function main() {
 			message,
 		})
 	});
+
+	// serve the React HTML file
+	app.get("*", (req, res) => {
+		res.sendFile(path.join(__dirname, "../app/build/index.html"));
+	})
 
 }
