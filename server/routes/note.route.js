@@ -2,6 +2,7 @@ const express = require('express')
 const SecureNote = require('../models/secureNote.model.js')
 const User = require('../models/user.model.js')                     //Need this because we use verifyUser from userVerification
 const userVerification = require('../util/userVerification.js');    //For checking the current user against their session cookie
+const customError = require('../util/customError.js');
 
 //Creates the router
 const router = express.Router();
