@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {ExpandedIcon, CollapsedIcon, UpdateIcon, EditIcon, CreateIcon, DeleteIcon, CancelIcon} from "./Icon.js";
 
 const BaseEntry = ({children, className="", editing, editable, setEditable, onEdit, onSave, onCancel, onDelete, title="", subtitle="", isNew=false, isEmpty=false, error=""}) => {
   const [isCollapsed, setCollapsed] = useState(true);
@@ -48,7 +49,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
           {subtitle && <h3>{subtitle}</h3>}
         </div>
         <span className="entry-buttons">
-          <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || (editing && (!isNew || !isEmpty))}>[Collapse/Expand]</button>
+          <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || (editing && (!isNew || !isEmpty))} aria-label={isCollapsed ? "Expand" : "Collapse"} className="icon-button">{isCollapsed ? <CollapsedIcon /> : <ExpandedIcon />}</button>
         </span>
       </header>
       <form onSubmit={e => {e.preventDefault(); submit()}}>
@@ -61,12 +62,12 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
             ? <>
               {error && <span className="error-message">{error}</span>}
               {saveError && <span className="error-message">{saveError}</span>}
-              <button type="reset" onClick={e => {e.preventDefault(); cancel()}}>[Cancel]</button>
-              <button type="submit">[{isNew ? "Create" : "Update"}]</button>
+              <button type="reset" onClick={e => {e.preventDefault(); cancel()}} aria-label="Cancel" className={"icon-button" + (isNew ? " destructive" : "")}><CancelIcon /></button>
+              <button type="submit" aria-label={isNew ? "Create" : "Update"} className="icon-button primary">{isNew ? <CreateIcon /> : <UpdateIcon />}</button>
             </>
             : <>
-              <button type="button" onClick={() => { setEditable(true); onEdit() }}>[Edit]</button>
-              <button type="button" onClick={() => { setDeleting(true); }}>[Delete]</button>
+              <button type="button" onClick={() => { setEditable(true); onEdit() }} aria-label="Edit" className="icon-button"><EditIcon /></button>
+              <button type="button" onClick={() => { setDeleting(true); }} aria-label="Delete" className="icon-button destructive"><DeleteIcon /></button>
             </>
           }
         </fieldset>

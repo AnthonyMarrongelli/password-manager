@@ -54,12 +54,11 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
       }}
     >
       <label>
-        Name:
-        <input type="text" required placeholder="Firstname" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} disabled={!editable} />
+        Name: <input type="text" required placeholder="Firstname" value={firstName} onChange={e => setFirstName(e.currentTarget.value)} disabled={!editable} />
         <input type="text" required placeholder="Lastname" value={lastName} onChange={e => setLastName(e.currentTarget.value)} disabled={!editable} />
       </label>
       <label>
-        Bank: <input type="text" required value={bank} onChange={e => setBank(e.currentTarget.value)} disabled={!editable} />
+        Issuer: <input type="text" required value={bank} onChange={e => setBank(e.currentTarget.value)} disabled={!editable} />
       </label>
       <label>
         Card number: <CardInput text={cardNumber} onChange={setCardNumber} disabled={!editable} />

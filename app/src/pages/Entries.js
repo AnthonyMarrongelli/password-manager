@@ -4,6 +4,7 @@ import LoginEntry from "../components/LoginEntry.js";
 import SecureNoteEntry from "../components/SecureNoteEntry.js";
 import CardEntry from "../components/CardEntry.js";
 import {useCookies} from "react-cookie";
+import {SearchIcon} from "../components/Icon.js";
 
 const simplifyEntry = (type, {_id, ...item}) => ({id: _id, type, ...item})
 
@@ -42,7 +43,7 @@ const Searchbar = () => {
 
   return <Form className="search">
     <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} />
-    <button type="submit">[Search]</button>
+    <button type="submit" aria-label="Search"><SearchIcon /></button>
   </Form>
 }
 

@@ -61,8 +61,8 @@ const Router = () => {
           <Route path="/cards"
             loader={doAuthFetch(cookies, "/server/card/list", {},
               devMode, keyword => [
-                {_id: "1", cardNumber: `1234567890123456 ${keyword}`, firstName: "Cardholder", lastName: "One", cvv: "111", expiration: "2025-01", bank: "Bank of Cardholding"},
-                {_id: "2", cardNumber: `2345678901234561 ${keyword}`, firstName: "Cardholder", lastName: "Two", cvv: "222", expiration: "2025-02", bank: "Cardholders Inc"},
+                {_id: "1", cardNumber: `1234567890123456${keyword}`, firstName: "Cardholder", lastName: "One", cvv: "111", expiration: "2025-01", bank: "Bank of Cardholding"},
+                {_id: "2", cardNumber: `2345678901234561${keyword}`, firstName: "Cardholder", lastName: "Two", cvv: "222", expiration: "2025-02", bank: "Cardholders Inc"},
               ], 1000)}
             element={<Entries key="cards" defaultType="card" devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
