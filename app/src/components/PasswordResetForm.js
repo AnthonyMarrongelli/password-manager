@@ -33,7 +33,7 @@ const PasswordResetForm = ({devMode}) => {
       .then(response => {
         navigate("/");
       }, error => {
-        setError(error);
+        setError(error.message);
       })
     }}>
       <h1>Let's get you a new password.</h1>

@@ -22,8 +22,9 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
     setEditable(false);
     try {
       await onSave();
+      setSaveError("");
     } catch (e) {
-      setSaveError(e);
+      setSaveError(e.message);
       setEditable(true);
     }
   }
@@ -37,7 +38,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
       await onDelete();
     } catch (e) {
       setActuallyDeleting(false);
-      setDeleteError(e);
+      setDeleteError(e.message);
     }
   }
 

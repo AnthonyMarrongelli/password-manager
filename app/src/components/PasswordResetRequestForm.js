@@ -13,7 +13,7 @@ export const PasswordRequestResetForm = ({devMode}) => {
     .then(response => {
       setEmailSent(true);
     }, error => {
-      setError(error);
+      setError(error.message);
     });
   }}>
     <h1>Forgot your password?</h1>

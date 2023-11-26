@@ -13,10 +13,9 @@ const LoginForm = ({devMode}) => {
     debugFetch("/server/auth/signin", {body: {email, password}},
       devMode, {success: true, user: {email, password, username: "test user", _id: 1}, session: {"access_token": "eyJhb...", "token_type": "Bearer", "expires_in": 3600}, message: "Sign-In Successful! Returned information on the current user Returned the Session Token."}, 1000)
     .then(response => {
-      setCookies("token", response.session);
-      setCookies("userid", response._id);
+      setCookies("token", response.session, {maxAge: 60 * 60 * 10});  // expires in 10 hours
     }, error => {
-      setError(error);
+      setError(error.message);
     });
   }}>
     <h1>Welcome back.</h1>

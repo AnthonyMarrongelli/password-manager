@@ -21,7 +21,7 @@ const SignupForm = ({devMode}) => {
     e.preventDefault();
     debugFetch("/server/auth/signup", {body: {username, email, password}}, devMode, {success: true, user: {username, email, password}, message: "User created! Returned information on the new user."}, 1000)
     .then(response => setEmailSent(true),
-      error => setError(error));
+      error => setError(error.message));
   }}>
     <h1>Hi there.</h1>
     {emailSent

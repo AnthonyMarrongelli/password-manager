@@ -12,7 +12,7 @@ const VerificationForm = ({devMode}) => {
     if (params.has("user") && params.has("verificationKey")) {
       debugFetch("/server/auth/verifyAccount", {body: {userID: params.get("user"), verificationKey: params.get("verificationKey")}},
         devMode, {message: "User verified! Redirecting to Home page..."}, 1000)
-      .then(() => setDone(true), error => setError(error));
+      .then(() => setDone(true), error => setError(error.message));
     }
   }, [params, devMode]);
 
