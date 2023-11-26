@@ -23,7 +23,7 @@ router.post('/create', userVerification.verifyUser, async (request, response, ne
         await newPassword.save(); //Save inside the DB
         response
             .status(201) // Created
-            .json({passlog: newPassword, message: "Password stored!"});
+            .json({pass: newPassword, message: "Password stored!"});
 
         console.log("Password stored!");
     
