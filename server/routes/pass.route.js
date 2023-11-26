@@ -9,11 +9,11 @@ const router = express.Router();
 /* ----------Create API---------- */
 //Create a new password and store it in the db
 router.post('/create', userVerification.verifyUser, async (request, response, next) => {
-
+    //Console logging
     console.log("Storing new password entry.........");
 
     //Collate data
-    const {userid} = request.sessionUser;
+    const { userid } = request.sessionUser;
     const { username, password, application } = request.body;
     
     //Add the password to the db
@@ -21,8 +21,8 @@ router.post('/create', userVerification.verifyUser, async (request, response, ne
     try {
         await newPassword.save(); //Save inside the DB
         response
-            .status(201)
-            .json({message: "Password stored!"}); // 201 means something was created
+            .status(201) // Created
+            .json({passlog: newPassword, message: "Password stored!"});
 
         console.log("Password stored!");
     
@@ -32,11 +32,10 @@ router.post('/create', userVerification.verifyUser, async (request, response, ne
 /* ----------Update API---------- */
 // First verify the user, then update the requested informaiton by changing the respective fields in the database
 router.post('/update', userVerification.verifyUser, async (request, response, next) => { //User if verified in verifyUser before API does anything
-
+    //Console logging
     console.log("Updating your password log.........");
 
     try {
-
         //Update the password log with the specified alterations
         const updatedPass = await PasswordLog.findByIdAndUpdate(request.body._id, {
             //Prevent updating protected information
@@ -47,12 +46,16 @@ router.post('/update', userVerification.verifyUser, async (request, response, ne
             }
         }, {new: true}) //new: true specifies that the updated info should be returned
 
-        //Return the updated password log
-        response
-            .status(200) // 200 is successful response code
-            .json({pass: updatedPass, message: "Password Log Updated Successfully!"});
+        //If anything was updated
+        if(updatedPass) {
+            //Return the updated password log
+            response
+                .status(200) // Success
+                .json({pass: updatedPass, message: "Password Log Updated Successfully!"});
 
-        console.log("Password Log Updated Successfully!");
+            console.log("Password Log Updated Successfully!");
+            
+        } else return next(customError.errorHandler(404, 'This password does not exist!')); // Not found
 
     } catch(error) { next(error); }
 
@@ -62,19 +65,23 @@ router.post('/update', userVerification.verifyUser, async (request, response, ne
 /* ----------Delete API---------- */
 // Delete the specified password
 router.delete('/delete', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
-
+    //Console logging
     console.log("Deleting your password log...");
 
     try {
+        //Try to delete the password
+        const deletedPass = await PasswordLog.findByIdAndDelete(request.body._id);
 
-        await PasswordLog.findByIdAndDelete(request.body._id);
+        //If anything was updated
+        if(deletedPass) {
+            //Report password deletion
+            response
+                .status(200) // Success
+                .json({message: 'This password log has been deleted...'});
 
-        //Report note deletion
-        response
-            .status(200) // 200 is successful response code
-            .json({message: 'This password log has been deleted...'});
-
-        console.log("This password log has been deleted...");
+            console.log("This password log has been deleted...");
+        
+        } else return next(customError.errorHandler(404, 'This password does not exist!')); // Not found
 
     } catch(error) { next(error); }
 
@@ -83,7 +90,7 @@ router.delete('/delete', userVerification.verifyUser, async (request, response, 
 /* ----------List API---------- */
 // Return all password logs that belong to the specified user
 router.post('/list', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
-
+    //Console logging
     console.log("Fetching the user's password logs...");
 
     try {
