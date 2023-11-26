@@ -43,7 +43,7 @@ const Router = () => {
         <Route element={cookies.token ? <Landing devMode={devMode} onLeaveDevMode={() => setDevMode(false)} /> : undefined}>
           <Route path="/landing" element={<Navigate to="/logins" replace />} />
           <Route path="/logins"
-            loader={doAuthFetch(cookies.token, "/server/pass/list", {},
+            loader={doAuthFetch(cookies, "/server/pass/list", {},
               devMode, keyword => [
                 {_id: "1", application: `an item! ${keyword}`, username: "user1", password: "password1"},
                 {_id: "2", application: `another ${keyword} item!`, username: "user2", password: "pass2"},
@@ -51,7 +51,7 @@ const Router = () => {
             element={<Entries key="logins" defaultType="login" devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
           <Route path="/notes"
-            loader={doAuthFetch(cookies.token, "/server/note/list", {},
+            loader={doAuthFetch(cookies, "/server/note/list", {},
               devMode, keyword => [
                 {_id: "1", title: `A secure note! Not really. ${keyword}`, text: "Lorem ipsum dolor sit amet, or whatever."},
                 {_id: "2", title: `Another fake secure note! Now with ${keyword}`, text: "Lorem ipsum dolor sit amet II, or whatever."},
@@ -59,7 +59,7 @@ const Router = () => {
             element={<Entries key="notes" defaultType="secureNote" devMode={devMode} onEnterDevMode={isDevelopment && (() => setDevMode(true))} />}
           />
           <Route path="/cards"
-            loader={doAuthFetch(cookies.token, "/server/card/list", {},
+            loader={doAuthFetch(cookies, "/server/card/list", {},
               devMode, keyword => [
                 {_id: "1", cardNumber: `1234567890123456 ${keyword}`, firstName: "Cardholder", lastName: "One", cvv: "111", expiration: "2025-01", bank: "Bank of Cardholding"},
                 {_id: "2", cardNumber: `2345678901234561 ${keyword}`, firstName: "Cardholder", lastName: "Two", cvv: "222", expiration: "2025-02", bank: "Cardholders Inc"},

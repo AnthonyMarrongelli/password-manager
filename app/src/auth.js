@@ -36,5 +36,5 @@ export const debugFetch = (url, {body = {}, headers = {}, ...options}, devMode, 
   });
 };
 
-export const authFetch = ({token="", userid=""}, url, {body, ...options}, devMode, debugFallback, debugWait = 0) =>
-  debugFetch(url, {...options, body: {...body, token, userid}}, devMode, debugFallback, debugWait);
+export const authFetch = ({token=""}, url, {body, ...options}, devMode, debugFallback, debugWait = 0) =>
+  debugFetch(url, {...options, body: {...body, session: token}}, devMode, debugFallback, debugWait);
