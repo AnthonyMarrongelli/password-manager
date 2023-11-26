@@ -151,10 +151,10 @@ router.post('/verifyAccount', async (request, response, next) => {
         // User exists
         if(currentUser) {
             // Keys matched
-            if(bcryptjs.compareSync(request.params.verificationKey, currentUser.emailKey)) {
+            if(bcryptjs.compareSync(verificationKey, currentUser.emailKey)) {
                 
                 // Verify the user by updating their "verified" field
-                await User.findByIdAndUpdate(passedID, {$set: {verified: true}});
+                await User.findByIdAndUpdate(userID, {$set: {verified: true}});
 
                 // Send out response
                 response
