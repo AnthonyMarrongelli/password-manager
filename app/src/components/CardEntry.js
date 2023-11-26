@@ -37,8 +37,8 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
       subtitle={bank}
       isNew={!cardInfo} isEmpty={!(cardNumber || cvv || expiration || bank || firstName || lastName || zip || billingAddress)}
       editable={editable} setEditable={setEditable} editing={unsaved} onEdit={() => setUnsaved(true)} onSave={async () => {
-        const newCard = await authFetch(cookies, cardInfo?.id ? "/server/card/update" : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id}},
-          devMode, {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id ?? ""+Math.random()}, 1000);
+        const newCard = (await authFetch(cookies, cardInfo?.id ? "/server/card/update" : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id}},
+          devMode, {card: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id ?? ""+Math.random()}}, 1000)).card;
         setUnsaved(false);
         onSave(newCard);
       }}

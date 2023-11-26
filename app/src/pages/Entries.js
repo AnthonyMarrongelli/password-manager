@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Await, Form, Link, useAsyncError, useLoaderData, useSearchParams} from "react-router-dom";
 import LoginEntry from "../components/LoginEntry.js";
 import SecureNoteEntry from "../components/SecureNoteEntry.js";
@@ -23,9 +23,6 @@ const appendEntry = (entries, setEntries, type) => (newItem) => {
 
 const EntriesList = ({items, devMode, defaultType}) => {
   const [entries, setEntries] = useState(items);
-
-  // why is this necessary.
-  useLayoutEffect(() => setEntries(items), [items]);
 
   /** @type {*} */
   const DefaultEntryKind = defaultType === "secureNote" ? SecureNoteEntry : defaultType === "card" ? CardEntry : LoginEntry;
@@ -58,6 +55,7 @@ const ErrorMessage = ({onEnterDevMode}) => {
 const Entries = ({defaultType, onEnterDevMode, devMode}) => {
   const [cookies] = useCookies(["token"]);
   const loaderData = /** @type {{items: object[]}} */ (useLoaderData());
+  const [params] = useSearchParams();
 
   if (!cookies.token) return <div className="error-page">
     <p>You need to be logged in to see this page. <Link to="/">Go back home</Link></p>
@@ -71,7 +69,7 @@ const Entries = ({defaultType, onEnterDevMode, devMode}) => {
           <Await
             resolve={loaderData.items}
             errorElement={<ErrorMessage onEnterDevMode={onEnterDevMode} />}
-            children={(items) => <EntriesList defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />}
+            children={(items) => <EntriesList key={params.get("q") ?? ""} defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />}
           />
         </React.Suspense>
       </div>

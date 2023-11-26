@@ -29,8 +29,8 @@ const LoginEntry = ({passInfo, onSave, onDelete, devMode}) => {
       subtitle={username}
       isNew={!passInfo} isEmpty={!(username || password || application)}
       editable={editable} setEditable={setEditable} editing={unsaved} onEdit={() => {setUnsaved(true)}} onSave={async () => {
-        const newPass = await authFetch(cookies, passInfo?.id ? "/server/pass/update/" : "/server/pass/create", {body: {username, password, application, _id: passInfo?.id}},
-          devMode, {username, password, application, _id: passInfo?.id ?? ""+Math.random()}, 1000);
+        const newPass = (await authFetch(cookies, passInfo?.id ? "/server/pass/update/" : "/server/pass/create", {body: {username, password, application, _id: passInfo?.id}},
+          devMode, {pass: {username, password, application, _id: passInfo?.id ?? ""+Math.random()}}, 1000)).pass;
         setUnsaved(false);
         onSave(newPass);
       }}

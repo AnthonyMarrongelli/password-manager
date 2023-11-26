@@ -4,11 +4,6 @@ export const debugFetch = (url, {body = {}, headers = {}, ...options}, devMode, 
     return debugFallback
       ? new Promise(res => setTimeout(() => res(debugFallback), debugWait))
       : Promise.reject("no debug fallback!");
-  if (isDevelopment) {
-    const editedURL = new URL(url);
-    editedURL.port = "3005";
-    //url = editedURL.toString();
-  }
   return fetch(url, {
     method: "POST",
     headers: {
