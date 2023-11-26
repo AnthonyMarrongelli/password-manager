@@ -33,8 +33,8 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
 
   return (
     <BaseEntry className="card"
-      title={bank}
-      subtitle={(cardNumber.length > 4 ? "*".repeat(cardNumber.length - 4) : "") + cardNumber.slice(-4)}
+      title={(cardNumber.length > 4 ? "*".repeat(cardNumber.length - 4) : "") + cardNumber.slice(-4)}
+      subtitle={bank}
       isNew={!cardInfo} isEmpty={!(cardNumber || cvv || expiration || bank || firstName || lastName || zip || billingAddress)}
       editable={editable} setEditable={setEditable} editing={unsaved} onEdit={() => setUnsaved(true)} onSave={async () => {
         const newCard = await authFetch(cookies, cardInfo?.id ? "/server/card/update" : "/server/card/create", {body: {cardNumber, cvv, expiration, bank, firstName, lastName, zip, billingAddress, _id: cardInfo?.id}},
