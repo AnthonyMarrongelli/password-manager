@@ -200,3 +200,7 @@ button, input {
 input.invalid, textarea.invalid {
   border-color: #a00;
 }
+.secondary-text {
+  color: #444;
+  font-style: italic;
+}

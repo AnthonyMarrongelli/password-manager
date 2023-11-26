@@ -101,10 +101,10 @@ const CardEntry = ({cardInfo, devMode, onSave, onDelete}) => {
         Expiration: <DirtyableInput type="month" required pattern="\d{4}-\d{2}" invalid={!expirationValid()} placeholder="2029-12" value={expiration} onChange={e => setExpiration(e.currentTarget.value)} disabled={!editable} dirty={expirationDirty} setDirty={setExpirationDirty} />
       </label>
       <label>
-        Billing address: <input type="text" value={billingAddress} onChange={e => setBillingAddress(e.currentTarget.value)} disabled={!editable} />
+        Billing address <span className="secondary-text">(optional)</span>: <input type="text" value={billingAddress} onChange={e => setBillingAddress(e.currentTarget.value)} disabled={!editable} />
       </label>
       <label>
-        Zip: <input type="text" minLength={5} maxLength={5} inputMode="numeric" value={zip} onChange={e => setZip(e.currentTarget.value)} disabled={!editable} />
+        Zip <span className="secondary-text">(optional)</span>: <input type="text" minLength={5} maxLength={5} inputMode="numeric" value={zip} onChange={e => setZip(e.currentTarget.value)} disabled={!editable} />
       </label>
     </BaseEntry>
   );

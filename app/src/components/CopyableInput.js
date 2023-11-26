@@ -42,7 +42,7 @@ export const CardInput = ({text, disabled=false, onChange, dirty=false, setDirty
 
   return (
     <BaseCopyableInput copyText={text}>
-      <DirtyableInput type="text" className={masked ? "masked" : ""} disabled={disabled} value={masked && !tempUnmasked && text.length > 4 ? "•".repeat(text.length - 4) + text.slice(-4) : text} inputMode="numeric" onFocus={e => setTempUnmasked(true)} onChange={e => {onChange(e.currentTarget.value)}} onBlur={e => setTempUnmasked(false)} required dirty={dirty} setDirty={setDirty} />
+      <DirtyableInput type="text" className={masked ? "masked" : ""} disabled={disabled} value={masked && !tempUnmasked && text.length > 4 ? "\u25cf".repeat(text.length - 4) + text.slice(-4) : text} inputMode="numeric" onFocus={e => setTempUnmasked(true)} onChange={e => {onChange(e.currentTarget.value)}} onBlur={e => setTempUnmasked(false)} required dirty={dirty} setDirty={setDirty} />
       <button type="button" onClick={() => setMasked(!masked)} aria-label={masked ? "Show" : "Hide"} className="icon-button">{masked ? <HiddenIcon /> : <ShownIcon />}</button>
     </BaseCopyableInput>
   )
