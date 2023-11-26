@@ -10,4 +10,5 @@ export {
   Trash3 as DeleteIcon,
   XLg as CancelIcon,
   Search as SearchIcon,
+  List as HamburgerMenuIcon,
 } from "react-bootstrap-icons";

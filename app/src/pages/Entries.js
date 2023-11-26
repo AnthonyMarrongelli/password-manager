@@ -37,12 +37,12 @@ const EntriesList = ({items, devMode, defaultType}) => {
   }).concat(<DefaultEntryKind onSave={appendEntry(entries, setEntries, defaultType)} devMode={devMode} />)}</>;
 }
 
-const Searchbar = () => {
+export const Searchbar = () => {
   const [params] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
 
-  return <Form className="search">
-    <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} />
+  return <Form className="search" relative="path">
+    <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} placeholder="Search..." />
     <button type="submit" aria-label="Search"><SearchIcon /></button>
   </Form>
 }
@@ -64,7 +64,7 @@ const Entries = ({defaultType, onEnterDevMode, devMode}) => {
 
   return (
     <>
-      <Searchbar />
+      {/* <Searchbar /> */}
       <div className="entry-list">
         <React.Suspense fallback={<div className="loader">Loading...</div>}>
           <Await

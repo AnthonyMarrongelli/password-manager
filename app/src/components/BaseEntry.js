@@ -49,7 +49,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
           {subtitle && <h3>{subtitle}</h3>}
         </div>
         <span className="entry-buttons">
-          <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || (editing && (!isNew || !isEmpty))} aria-label={isCollapsed ? "Expand" : "Collapse"} className="icon-button">{isCollapsed ? <CollapsedIcon /> : <ExpandedIcon />}</button>
+          <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || (editing && (!isNew || !isEmpty))} aria-label={isCollapsed ? "Expand" : "Collapse"} aria-expanded={!isCollapsed} className="icon-button">{isCollapsed ? <CollapsedIcon /> : <ExpandedIcon />}</button>
         </span>
       </header>
       <form onSubmit={e => {e.preventDefault(); submit()}}>
