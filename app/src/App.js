@@ -37,7 +37,7 @@ const Router = () => {
         <Route index loader={() => redirect(cookies.token ? "/landing" : "/sign-in")} />
         <Route element={cookies.token ? <Navigate to="/landing" /> : <Index devMode={devMode} setDevMode={isDevelopment && setDevMode} />}>
           <Route path="/sign-in" element={<Login devMode={devMode} />} />
-          <Route path="/verify" element={<Signup devMode={devMode} />} />
+          <Route path="/accountVerification" element={<Signup devMode={devMode} />} />
           <Route path="/pw-reset" element={<PasswordReset devMode={devMode} />} />
         </Route>
         <Route element={cookies.token ? <Landing devMode={devMode} onLeaveDevMode={() => setDevMode(false)} /> : undefined}>
