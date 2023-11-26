@@ -13,11 +13,11 @@ router.post('/create', userVerification.verifyUser, async (request, response, ne
     console.log("Storing new note.........");
 
     //Collate data
-    const userID = request.sessionUser.userid;
+    const {userid} = request.sessionUser;
     const { title, text } = request.body;
     
     //Add user to the db
-    const newSecureNote = new SecureNote({userID, title, text});
+    const newSecureNote = new SecureNote({userid, title, text});
     try {
         await newSecureNote.save(); //Save inside the DB
         response
@@ -81,7 +81,7 @@ router.delete('/delete', userVerification.verifyUser, async (request, response, 
 
 /* ----------List API---------- */
 // Return all notes that belong to the specified user
-router.get('/list', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
+router.post('/list', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
 
     console.log("Fetching the user's secure notes...");
 

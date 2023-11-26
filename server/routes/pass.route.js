@@ -13,11 +13,11 @@ router.post('/create', userVerification.verifyUser, async (request, response, ne
     console.log("Storing new password entry.........");
 
     //Collate data
-    const userID = request.sessionUser.userid;
+    const {userid} = request.sessionUser;
     const { username, password, application } = request.body;
     
     //Add the password to the db
-    const newPassword = new PasswordLog({userID, username, password, application});
+    const newPassword = new PasswordLog({userid, username, password, application});
     try {
         await newPassword.save(); //Save inside the DB
         response
@@ -82,7 +82,7 @@ router.delete('/delete', userVerification.verifyUser, async (request, response, 
 
 /* ----------List API---------- */
 // Return all password logs that belong to the specified user
-router.get('/list', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
+router.post('/list', userVerification.verifyUser, async (request, response, next) => { //User is verified in verifyUser before API does anything
 
     console.log("Fetching the user's password logs...");
 
