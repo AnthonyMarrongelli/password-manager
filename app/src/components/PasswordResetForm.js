@@ -40,7 +40,7 @@ const PasswordResetForm = ({devMode}) => {
 
       <label>
         Password
-        <input type="text" value={password1} onChange={e => setPassword1(e.currentTarget.value)} required />
+        <input type="password" value={password1} onChange={e => setPassword1(e.currentTarget.value)} required />
       </label>
       <label>
         Reenter password

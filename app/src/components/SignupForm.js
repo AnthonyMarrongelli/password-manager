@@ -1,13 +1,21 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {debugFetch} from "../auth.js";
 
 
 const SignupForm = ({devMode}) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
   const [password, setPassword] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState("");
+
+
+  useEffect(() => {
+    if (password1 === password2) setPassword(password1);
+    else setPassword("");
+  }, [password1, password2]);
 
   return <form onSubmit={async (e) => {
     e.preventDefault();
@@ -33,7 +41,11 @@ const SignupForm = ({devMode}) => {
         </label>
         <label>
           Password
-          <input type="password" value={password} onChange={e => setPassword(e.currentTarget.value)} required />
+          <input type="password" value={password1} onChange={e => setPassword1(e.currentTarget.value)} required />
+        </label>
+        <label>
+          Confirm password
+          <input type="password" value={password2} onChange={e => setPassword2(e.currentTarget.value)} required />
         </label>
         <button type="submit">Send confirmation email</button>
         {error && <p className="error-message">{error}</p>}
