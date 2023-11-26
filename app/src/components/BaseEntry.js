@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import {ExpandedIcon, CollapsedIcon, UpdateIcon, EditIcon, CreateIcon, DeleteIcon, CancelIcon} from "./Icon.js";
+import {ValidatingForm} from "./CopyableInput.js";
 
-const BaseEntry = ({children, className="", editing, editable, setEditable, onEdit, onSave, onCancel, onDelete, title="", subtitle="", isNew=false, isEmpty=false, error=""}) => {
+const BaseEntry = ({children, className="", editing, editable, setEditable, onEdit, onSave, onCancel, onDelete, title="", subtitle="", isNew=false, isEmpty=false, validate=(()=>{})}) => {
   const [isCollapsed, setCollapsed] = useState(true);
   const [isDeleting, setDeleting] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [isActuallyDeleting, setActuallyDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [inputError, setInputError] = useState("");
 
   const cancel = async () => {
     if (isNew) {
@@ -53,7 +55,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
           <button type="button" onClick={() => setCollapsed(!isCollapsed)} disabled={!children || (editing && (!isNew || !isEmpty))} aria-label={isCollapsed ? "Expand" : "Collapse"} aria-expanded={!isCollapsed} className="icon-button">{isCollapsed ? <CollapsedIcon /> : <ExpandedIcon />}</button>
         </span>
       </header>
-      <form onSubmit={e => {e.preventDefault(); submit()}}>
+      <ValidatingForm onSubmit={submit} validate={validate} inputError={inputError} setInputError={setInputError}>
         <fieldset disabled={isDeleting}>
           {children}
         </fieldset>
@@ -61,7 +63,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
           {
             editing
             ? <>
-              {error && <span className="error-message">{error}</span>}
+              {!!inputError && <span className="error-message">{inputError}</span>}
               {saveError && <span className="error-message">{saveError}</span>}
               <button type="reset" onClick={e => {e.preventDefault(); cancel()}} aria-label="Cancel" className={"icon-button" + (isNew ? " destructive" : "")}><CancelIcon /></button>
               <button type="submit" aria-label={isNew ? "Create" : "Update"} className="icon-button primary">{isNew ? <CreateIcon /> : <UpdateIcon />}</button>
@@ -80,7 +82,7 @@ const BaseEntry = ({children, className="", editing, editable, setEditable, onEd
             <button type="submit" className="destructive" onClick={e => {e.preventDefault(); del()}}>Delete</button>
           </fieldset>
         </fieldset> }
-      </form>
+      </ValidatingForm>
     </li>
   );
 };

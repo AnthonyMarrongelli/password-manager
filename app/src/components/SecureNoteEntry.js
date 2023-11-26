@@ -2,6 +2,8 @@ import React, {useLayoutEffect, useState} from "react";
 import BaseEntry from "./BaseEntry.js";
 import {authFetch} from "../auth.js";
 import {useCookies} from "react-cookie";
+import {DirtyableInput} from "./CopyableInput.js";
+import {formatList} from "../util.js";
 
 const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
   const [editable, setEditable] = useState(!noteInfo);
@@ -15,6 +17,19 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
     setText(noteInfo?.text ?? "");
   }
 
+  const [titleDirty, setTitleDirty] = useState(false);
+  const [textDirty, setTextDirty] = useState(false);
+
+  const validate = () => {
+    setTitleDirty(true);
+    setTextDirty(true);
+    const missing = [
+      !title && "title",
+      !text && "text",
+    ].filter(i => i);
+    return missing.length && "Missing " + formatList(missing);
+  }
+
   useLayoutEffect(init, [noteInfo]);
 
   return (
@@ -26,7 +41,7 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
           devMode, {note: {title, text, _id: noteInfo?.id ?? ""+Math.random()}}, 1000)).note;
         setUnsaved(false);
         onSave(newNote);
-      }}
+      }} validate={validate}
       onCancel={() => {
         setUnsaved(false);
         init();
@@ -38,8 +53,8 @@ const SecureNoteEntry = ({noteInfo, onSave, onDelete, devMode}) => {
         onDelete();
       }}
     >
-      <input type="text" required value={title} onChange={e => setTitle(e.currentTarget.value)} disabled={!editable} />
-      <textarea onChange={e => setText(e.currentTarget.value)} disabled={!editable} value={text} />
+      <DirtyableInput type="text" required placeholder="Title" value={title} onChange={e => setTitle(e.currentTarget.value)} disabled={!editable} dirty={titleDirty} setDirty={setTitleDirty} />
+      <textarea placeholder="Enter your note contents here!" onChange={e => {setText(e.currentTarget.value); setTextDirty(true)}} onBlur={() => setTextDirty(true)} className={textDirty && !text ? "invalid" : ""} disabled={!editable} value={text} />
     </BaseEntry>
   );
 };
