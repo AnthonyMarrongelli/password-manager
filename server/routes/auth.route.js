@@ -20,22 +20,27 @@ router.post('/signup', async (request, response, next) => { // Async lets us use
     const { username, email, password } = request.body;
     const hashedPassword = bcryptjs.hashSync(password, 10); //implicit await. 10 is the salt num
     
-    //Add user to the db
-    const newUser = new User({username, email, password: hashedPassword, verified: false});
     try {
-        await newUser.save(); //Save inside the DB. Await keeps us here until task complete
+        //Make sure the user doesn't exist already
+        const currentUser = await User.findOne({email});
+        if(!currentUser) {
+            //Add user to the db
+            const newUser = new User({username, email, password: hashedPassword, verified: false});
+            await newUser.save(); //Save inside the DB. Await keeps us here until task complete
 
-        //Send the verification email
-        await sendVerificationEmail(newUser, next);
+            //Send the verification email
+            await sendVerificationEmail(newUser, next);
 
-        response
-            .status(201) // Created
-            .json({
-                user: newUser,
-                message: "User created! Returned information on the new user."
-            });
+            response
+                .status(201) // Created
+                .json({
+                    user: newUser,
+                    message: "User created! Returned information on the new user."
+                });
+            
+            console.log("User created!");
         
-        console.log("User created!");
+        } return next(customError.errorHandler(403, 'This user already exists!')); // Forbidden
     
     // Catch try block error and pass it to the middleware
     } catch(error) { next(error); }
@@ -252,50 +257,56 @@ router.post('/sendPassEmail/', async (request, response, next) => {
 const sendVerificationEmail = async ({_id, email, username}, next) => {
 
     try {
-        //Brevo Initialization
-        let defaultClient = brevo.ApiClient.instance;
-        let apiKey = defaultClient.authentications['api-key'];
-        apiKey.apiKey = process.env.BREVO_CON;
+        // Check that the specified account exists
+        const currentUser = await User.findOne({"email": request.body.email});
+        if (currentUser) {
 
-        //Brevo Connection
-        let apiInstance = new brevo.TransactionalEmailsApi();
-        let sendSmtpEmail = new brevo.SendSmtpEmail();
+            //Brevo Initialization
+            let defaultClient = brevo.ApiClient.instance;
+            let apiKey = defaultClient.authentications['api-key'];
+            apiKey.apiKey = process.env.BREVO_CON;
 
-        //Set up the Email
-        const verificationKey = v4() + _id; //Unique string used to verify the user
-        sendSmtpEmail.subject = "RetroVault User Confirmation";
+            //Brevo Connection
+            let apiInstance = new brevo.TransactionalEmailsApi();
+            let sendSmtpEmail = new brevo.SendSmtpEmail();
 
-        sendSmtpEmail.htmlContent = 
-            `<p>Please click the link below to verify your account and begin buffing your security with RetroVault.</p>
-            <p><a href=${"https://retrovault.co/accountVerification?user=" + _id + "&verificationKey=" + verificationKey}>Verify Me!</a></p>`;
+            //Set up the Email
+            const verificationKey = v4() + _id; //Unique string used to verify the user
+            sendSmtpEmail.subject = "RetroVault User Confirmation";
 
-        sendSmtpEmail.sender = 
-        {
-            "name": "RetroVault",
-            "email": "no-reply@retrovault.co",
-        };
-        
-        sendSmtpEmail.to =
-        [{
-            "email": email,
-            "name": username,
-        }];
+            sendSmtpEmail.htmlContent = 
+                `<p>Please click the link below to verify your account and begin buffing your security with RetroVault.</p>
+                <p><a href=${"https://retrovault.co/accountVerification?user=" + _id + "&verificationKey=" + verificationKey}>Verify Me!</a></p>`;
 
-        // Save the verification key
-        const hashedKey = bcryptjs.hashSync(verificationKey, 10); // Hash the key
-        await User.findByIdAndUpdate(_id, {  //Update the user with the specified alterations
-            //Prevent updating protected information
-            $set: {emailKey: hashedKey}
-        });
+            sendSmtpEmail.sender = 
+            {
+                "name": "RetroVault",
+                "email": "no-reply@retrovault.co",
+            };
+            
+            sendSmtpEmail.to =
+            [{
+                "email": email,
+                "name": username,
+            }];
 
-        // Send the email
-        apiInstance.sendTransacEmail(sendSmtpEmail)
-        .then(function (data) {
-            console.log("Email sent successfully!");
-        
-        }, function (error) {
-            console.error(error);
-        });
+            // Save the verification key
+            const hashedKey = bcryptjs.hashSync(verificationKey, 10); // Hash the key
+            await User.findByIdAndUpdate(_id, {  //Update the user with the specified alterations
+                //Prevent updating protected information
+                $set: {emailKey: hashedKey}
+            });
+
+            // Send the email
+            apiInstance.sendTransacEmail(sendSmtpEmail)
+            .then(function (data) {
+                console.log("Email sent successfully!");
+            
+            }, function (error) {
+                console.error(error);
+            });
+
+        } else return next(customError.errorHandler(404, 'Invalid Email!')); // Not Found
 
 
     // Catch try block errors
