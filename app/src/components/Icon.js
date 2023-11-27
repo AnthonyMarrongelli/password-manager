@@ -11,4 +11,10 @@ export {
   XLg as CancelIcon,
   Search as SearchIcon,
   List as HamburgerMenuIcon,
+  CreditCard as CardIcon,
+  FileLock2 as SecureNoteIcon,
+  PersonFillLock as LoginIcon,
+  Power as PowerIcon
+
+
 } from "react-bootstrap-icons";
