@@ -36,7 +36,7 @@ router.post('/signup', async (request, response, next) => { // Async lets us use
             //Brevo Initialization
             let defaultClient = brevo.ApiClient.instance;
             let apiKey = defaultClient.authentications['api-key'];
-            apiKey.apiKey = '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';
+            apiKey.apiKey = process.env.BREVO_CON;
 
             //Brevo Connection
             let apiInstance = new brevo.TransactionalEmailsApi();
@@ -246,7 +246,7 @@ router.post('/sendPassEmail/', async (request, response, next) => {
             //Brevo Initialization
             let defaultClient = brevo.ApiClient.instance;
             let apiKey = defaultClient.authentications['api-key'];
-            apiKey.apiKey = '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';
+            apiKey.apiKey = process.env.BREVO_CON;
 
             //Brevo Connection
             let apiInstance = new brevo.TransactionalEmailsApi();
