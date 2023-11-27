@@ -16,7 +16,7 @@ const Landing = ({devMode, onLeaveDevMode}) => {
     <div className="main">
       <header>
         <button onClick={() => {setNavDrawerOpen(!navDrawerOpen)}} aria-label="Menu" aria-expanded={navDrawerOpen}><HamburgerMenuIcon /></button> 
-        <span className="app-name">RetroVault</span>
+        <span className="font-stuff">RetroVault</span>
         <Searchbar />
       </header>
       <nav className={navDrawerOpen ? "open" : ""}>
