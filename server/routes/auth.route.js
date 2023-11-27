@@ -40,7 +40,7 @@ router.post('/signup', async (request, response, next) => { // Async lets us use
             
             console.log("User created!");
         
-        } return next(customError.errorHandler(403, 'This user already exists!')); // Forbidden
+        } else return next(customError.errorHandler(403, 'This user already exists!')); // Forbidden
     
     // Catch try block error and pass it to the middleware
     } catch(error) { next(error); }
