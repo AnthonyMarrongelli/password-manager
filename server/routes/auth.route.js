@@ -23,7 +23,7 @@ router.post('/signup', async (request, response, next) => { // Async lets us use
     try {
         //Make sure the user doesn't exist already
         const existentUser = await User.findOne({email});
-        if(!existentUser) {
+        if(!existentUser || existentUser.verified == false) {
             //Add user to the db
             const newUser = new User({username, email, password: hashedPassword, verified: false});
             await newUser.save(); //Save inside the DB. Await keeps us here until task complete
