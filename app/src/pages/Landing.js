@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import {Link, Outlet, useLocation} from "react-router-dom";
+import {HamburgerMenuIcon} from "../components/Icon.js";
+import {Searchbar} from "./Entries.js";
 
 const NavLink = ({to, children, className=""}) => {
   const location = useLocation();
@@ -8,11 +10,15 @@ const NavLink = ({to, children, className=""}) => {
 }
 
 const Landing = ({devMode, onLeaveDevMode}) => {
-  const [navDrawerOpen, setNavDrawerOpen] = useState(false)
+  const [navDrawerOpen, setNavDrawerOpen] = useState(window.innerWidth > 600);
 
   return (
     <div className="main">
-      <header><button onClick={() => {setNavDrawerOpen(!navDrawerOpen)}}>Hamburger menu</button>[A header. Only visible on mobile.]</header>
+      <header>
+        <button onClick={() => {setNavDrawerOpen(!navDrawerOpen)}} aria-label="Menu" aria-expanded={navDrawerOpen}><HamburgerMenuIcon /></button> 
+        <span className="app-name">RetroVault</span>
+        <Searchbar />
+      </header>
       <nav className={navDrawerOpen ? "open" : ""}>
         <NavLink to="/logins">Logins</NavLink>
         <NavLink to="/notes">Secure Notes</NavLink>
