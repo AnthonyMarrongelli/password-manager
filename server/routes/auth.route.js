@@ -26,19 +26,21 @@ router.post('/signup', async (request, response, next) => { // Async lets us use
         if(!currentUser) {
             //Add user to the db
             const newUser = new User({username, email, password: hashedPassword, verified: false});
-            await newUser.save(); //Save inside the DB. Await keeps us here until task complete
-
+            
             //Send the verification email
-            await sendVerificationEmail(newUser, next);
+            if (sendVerificationEmail(newUser, next)) {
+                await newUser.save(); //Save inside the DB. Await keeps us here until task complete
 
-            response
+                response
                 .status(201) // Created
                 .json({
                     user: newUser,
                     message: "User created! Returned information on the new user."
                 });
             
-            console.log("User created!");
+                console.log("User created!");
+            
+            } else return next(customError.errorHandler(404, 'Invalid Email!')); // Not Found
         
         } else return next(customError.errorHandler(403, 'This user already exists!')); // Forbidden
     
@@ -306,7 +308,9 @@ const sendVerificationEmail = async ({_id, email, username}, next) => {
                 console.error(error);
             });
 
-        } else return next(customError.errorHandler(404, 'Invalid Email!')); // Not Found
+            return 0;
+
+        } else return 1; // Not Found
 
 
     // Catch try block errors
