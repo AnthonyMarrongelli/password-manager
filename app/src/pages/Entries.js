@@ -1,9 +1,10 @@
-import React, {useLayoutEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Await, Form, Link, useAsyncError, useLoaderData, useSearchParams} from "react-router-dom";
 import LoginEntry from "../components/LoginEntry.js";
 import SecureNoteEntry from "../components/SecureNoteEntry.js";
 import CardEntry from "../components/CardEntry.js";
 import {useCookies} from "react-cookie";
+import {SearchIcon} from "../components/Icon.js";
 
 const simplifyEntry = (type, {_id, ...item}) => ({id: _id, type, ...item})
 
@@ -24,9 +25,6 @@ const appendEntry = (entries, setEntries, type) => (newItem) => {
 const EntriesList = ({items, devMode, defaultType}) => {
   const [entries, setEntries] = useState(items);
 
-  // why is this necessary.
-  useLayoutEffect(() => setEntries(items), [items]);
-
   /** @type {*} */
   const DefaultEntryKind = defaultType === "secureNote" ? SecureNoteEntry : defaultType === "card" ? CardEntry : LoginEntry;
 
@@ -39,13 +37,13 @@ const EntriesList = ({items, devMode, defaultType}) => {
   }).concat(<DefaultEntryKind onSave={appendEntry(entries, setEntries, defaultType)} devMode={devMode} />)}</>;
 }
 
-const Searchbar = () => {
+export const Searchbar = () => {
   const [params] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
 
-  return <Form className="search">
-    <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} />
-    <button type="submit">[Search]</button>
+  return <Form className="search" relative="path">
+    <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} placeholder="Search..." />
+    <button type="submit" aria-label="Search"><SearchIcon /></button>
   </Form>
 }
 
@@ -58,6 +56,7 @@ const ErrorMessage = ({onEnterDevMode}) => {
 const Entries = ({defaultType, onEnterDevMode, devMode}) => {
   const [cookies] = useCookies(["token"]);
   const loaderData = /** @type {{items: object[]}} */ (useLoaderData());
+  const [params] = useSearchParams();
 
   if (!cookies.token) return <div className="error-page">
     <p>You need to be logged in to see this page. <Link to="/">Go back home</Link></p>
@@ -65,13 +64,13 @@ const Entries = ({defaultType, onEnterDevMode, devMode}) => {
 
   return (
     <>
-      <Searchbar />
+      {/* <Searchbar /> */}
       <div className="entry-list">
         <React.Suspense fallback={<div className="loader">Loading...</div>}>
           <Await
             resolve={loaderData.items}
             errorElement={<ErrorMessage onEnterDevMode={onEnterDevMode} />}
-            children={(items) => <EntriesList defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />}
+            children={(items) => <EntriesList key={params.get("q") ?? ""} defaultType={defaultType} items={items.map(item => simplifyEntry(defaultType, item))} devMode={devMode} />}
           />
         </React.Suspense>
       </div>

@@ -38,7 +38,10 @@ const PassGenOptions = ({onSubmit, defaults, disabled=false}) => {
         Include characters from every group: <input type="checkbox" checked={strict} onChange={e => setStrict(e.currentTarget.checked)} />
       </label>
 
-      <button type="button" onClick={() => onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict})}>Generate</button>
+      <button type="button" onClick={e => {
+        onSubmit({length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters, exclude, strict});
+        e.currentTarget.dispatchEvent(new Event("input", {bubbles: true}));  // to trigger revalidation if necessary
+      }}>Generate</button>
     </fieldset>
   )
 };
