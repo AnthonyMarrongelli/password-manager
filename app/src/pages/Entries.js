@@ -43,7 +43,7 @@ export const Searchbar = () => {
 
   return <Form className="search" relative="path">
     <input type="search" value={query} name="q" onChange={e => setQuery(e.currentTarget.value)} placeholder="Search..." />
-    <button type="submit" aria-label="Search"><SearchIcon /></button>
+    <button type="submit" aria-label="Search" className="icon-button"><SearchIcon /></button>
   </Form>
 }
 
