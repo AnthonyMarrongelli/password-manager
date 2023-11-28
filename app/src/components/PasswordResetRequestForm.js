@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {debugFetch} from "../auth.js";
 import {DirtyableInput, ValidatingForm} from "./CopyableInput.js";
+import {emailRegexp} from "../util.js";
 
 
 export const PasswordRequestResetForm = ({devMode}) => {
@@ -10,7 +11,9 @@ export const PasswordRequestResetForm = ({devMode}) => {
 
   const [emailDirty, setEmailDirty] = useState(false);
 
-  return <ValidatingForm validate={() => {setError(""); if (!email) return "Missing email."}} onSubmit={() => {
+  const emailValid = () => email.match(emailRegexp);
+
+  return <ValidatingForm validate={() => {setError(""); if (!email) return "Missing email."; if (!emailValid()) return "Missing valid email."}} onSubmit={() => {
     debugFetch("/server/auth/sendPassEmail", {body: {email}}, devMode, {success: true}, 1000)
     .then(response => {
       setEmailSent(true);
@@ -27,8 +30,8 @@ export const PasswordRequestResetForm = ({devMode}) => {
       : <>
         <p>Let's get you a new one.</p>
         <label>
-          {emailSent ? "" : "Email"}
-          <DirtyableInput type={emailSent ? "hidden" : "email"} value={email} onChange={e => setEmail(e.currentTarget.value)} required dirty={emailDirty} setDirty={setEmailDirty} />
+          Email
+          <DirtyableInput type="email" value={email} onChange={e => setEmail(e.currentTarget.value)} required invalid={!emailValid()} dirty={emailDirty} setDirty={setEmailDirty} />
         </label>
         <button type="submit">Send password reset email</button>
         {error && <p className="error-message">{error}</p>}

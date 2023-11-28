@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {debugFetch} from "../auth.js";
-import {formatList} from "../util.js";
+import {emailRegexp, formatList} from "../util.js";
 import {DirtyableInput, ValidatingForm} from "./CopyableInput.js";
 
 
@@ -23,6 +23,8 @@ const SignupForm = ({devMode}) => {
   const [password1Dirty, setPassword1Dirty] = useState(false);
   const [password2Dirty, setPassword2Dirty] = useState(false);
 
+  const emailValid = () => email.match(emailRegexp);
+
   const validate = () => {
     setError("");
     setEmailDirty(true);
@@ -34,13 +36,13 @@ const SignupForm = ({devMode}) => {
       password2 ? "Ensure passwords match." : "Reenter password."
     );
     const missing = [
-      !email && "email",
+      !email ? "email" : !emailValid() && "valid email",
       !username && "username",
       !password1 && "password",
     ].filter(i => i);
-    if (missing.length && (!password1 || password)) return formatList(missing);
+    if (missing.length && (!password1 || password)) return "Missing " + formatList(missing);
     else if (!missing.length) return passwordError;
-    else if (missing.length && passwordError) return missing + " " + passwordError.toLowerCase();
+    else if (missing.length && passwordError) return "Missing " + formatList(missing) + "; " + passwordError.toLowerCase();
   }
 
   return <ValidatingForm validate={validate} onSubmit={async () => {

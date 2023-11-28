@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { debugFetch } from "../auth.js";
 import {useCookies} from "react-cookie";
-import {formatList} from "../util.js";
+import {emailRegexp, formatList} from "../util.js";
 import {DirtyableInput, ValidatingForm} from "./CopyableInput.js";
 
 const LoginForm = ({devMode}) => {
@@ -13,15 +13,17 @@ const LoginForm = ({devMode}) => {
   const [emailDirty, setEmailDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
 
+  const emailValid = () => email.match(emailRegexp);
+
   const validate = () => {
     setError("");
     setEmailDirty(true);
     setPasswordDirty(true);
     const missing = [
-      !email && "email",
+      !email ? "email" : !emailValid() && "valid email",
       !password && "password",
     ].filter(i => i);
-    return missing.length && formatList(missing);
+    return missing.length && "Missing " + formatList(missing);
   };
 
   return <ValidatingForm validate={validate} onSubmit={() => {
@@ -37,7 +39,7 @@ const LoginForm = ({devMode}) => {
 
     <label>
       Email
-      <DirtyableInput type="email" value={email} onChange={e => setEmail(e.currentTarget.value)} required dirty={emailDirty} setDirty={setEmailDirty} />
+      <DirtyableInput type="email" value={email} onChange={e => setEmail(e.currentTarget.value)} required invalid={!emailValid()} dirty={emailDirty} setDirty={setEmailDirty} />
     </label>
     <label>
       Password

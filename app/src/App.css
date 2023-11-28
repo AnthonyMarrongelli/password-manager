@@ -127,6 +127,9 @@
   background-color: #aee9fb;
 
 }
+.main > header > button:hover, .main > header > button:active {
+  background-color: #8cdff9;
+}
 .main > header > .app-name {
   font-size: 1.6em;
   font-weight: bold;
@@ -169,7 +172,7 @@
   list-style: none;
 }
 .entry-list > .entry:not(:first-child) {
-  border-top: solid black 0px;
+  border-top: solid black 0px; 
 }
 .entry-list > .entry > * {
   padding: 1em;
@@ -180,7 +183,7 @@
 }
 .entry-list > .entry > :first-child {
   display: flex;
-
+  align-items: center;
 }
 .entry-list > .entry > :first-child .entry-heading {
   flex-grow: 1;
@@ -217,10 +220,81 @@
 button, input {
   font-size: 1em;
 }
-input.invalid, textarea.invalid {
+.icon-button {
+  width: 2em;
+  height: 2em;
+  padding: 0;
+}
+.icon-button > * {
+  margin-top: 2.5px;
+}
+input.invalid:not([type="checkbox"]), textarea.invalid {
   border-color: #a00;
 }
 .secondary-text {
   color: #444;
   font-style: italic;
+}
+fieldset {
+  border: none; padding: 0;
+}
+.edit-controls {
+  padding-top: .5em;
+}
+.edit-controls button {
+  margin-left: 2px;
+}
+.entry:not(.collapsed) > header {
+  border-radius: 1em 1em 0 0;
+}
+.entry:not(.collapsed) > form {
+  border-radius: 0 0 1em 1em;
+  position: relative;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  border-radius: 0 0 1em 1em;
+  padding: 1em;
+  background-color: #dddb;
+  backdrop-filter: blur(1.5px);
+  z-index: 1;
+}
+button, input:not([type="checkbox"]) {
+  border: solid #777 1px;
+  border-radius: 2px;
+  padding: 2px 3px;
+}
+.entry :not(.entry-input) > input:not([type="checkbox"]) {
+  height: calc(2em - 6px);
+}
+.entry-input {
+  display: inline-flex;
+  height: 2em;
+}
+button.destructive:not(:disabled) {
+  background-color: #fdd;
+  color: #700;
+}
+button.destructive:not(:disabled):hover, button.destructive:not(:disabled):active {
+  background-color: #dbb;
+}
+button.primary:not(:disabled) {
+  background-color: #d3f1f9;
+}
+button.primary:not(:disabled):hover, button.primary:not(:disabled):active {
+  background-color: #b4f3fe;
+}
+.entry-list > span.error-message {
+  display: block;
+  background-color: #fdd;
+  padding: 1em;
+  border-radius: 1em;
+}
+.error-page {
+  padding: 1em;
 }
