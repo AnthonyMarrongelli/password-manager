@@ -17,7 +17,7 @@ export const ValidatingForm = ({onSubmit, validate, children, inputError="", set
     return onSubmit(e);
   }} onInput={() => {if (inputE) setOnInputFlipper(!onInputFlipper)}}>
     {children}
-    {inputE && !setInputError && <p className="error-message">{inputError}</p>}
+    {inputE && !setInputError && <p className="error-message">{inputE}</p>}
   </form>
 }
 

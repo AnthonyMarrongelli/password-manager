@@ -40,9 +40,9 @@ const SignupForm = ({devMode}) => {
       !username && "username",
       !password1 && "password",
     ].filter(i => i);
-    if (missing.length && (!password1 || password)) return formatList(missing);
+    if (missing.length && (!password1 || password)) return "Missing " + formatList(missing);
     else if (!missing.length) return passwordError;
-    else if (missing.length && passwordError) return missing + "; " + passwordError.toLowerCase();
+    else if (missing.length && passwordError) return "Missing " + formatList(missing) + "; " + passwordError.toLowerCase();
   }
 
   return <ValidatingForm validate={validate} onSubmit={async () => {

@@ -23,7 +23,7 @@ const LoginForm = ({devMode}) => {
       !email ? "email" : !emailValid() && "valid email",
       !password && "password",
     ].filter(i => i);
-    return missing.length && formatList(missing);
+    return missing.length && "Missing " + formatList(missing);
   };
 
   return <ValidatingForm validate={validate} onSubmit={() => {

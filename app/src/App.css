@@ -228,7 +228,7 @@ button, input {
 .icon-button > * {
   margin-top: 2.5px;
 }
-input.invalid, textarea.invalid {
+input.invalid:not([type="checkbox"]), textarea.invalid {
   border-color: #a00;
 }
 .secondary-text {
