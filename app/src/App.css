@@ -62,12 +62,14 @@
 .main > header {
   display: flex;
   position: fixed;
+  align-items: center;
   top: 0;
   left: 0;
   right: 0;
   height: 2em;
   padding: .5em;
-  background-color: #aaa;
+  background: url("imgs/RetroVault_Logo.jpg") right no-repeat, #aee9fb;
+  background-size: 75px;
 }
 .main > nav {
   display: flex;
@@ -77,16 +79,23 @@
   left: 0;
   bottom: 0;
   width: 20em;
-  background-color: #ddd;
+  background-color: #d3f1f9;
 }
 .main > nav > a {
   padding: .5em;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+}
+.main > nav > a > span {
+  flex-grow: 1;
 }
 .main > nav > a.current {
-  background-color: #ccc;
+  background-color: #b4f3fe;
 }
 .main > nav > a:hover {
-  background-color: #bbb;
+  background-color: #8cdff9;
 }
 .main > nav > .separator {
   flex-grow: 1;
@@ -105,6 +114,8 @@
   right: 0;
   overflow-y: auto;
   padding: 2em;
+  background-image: url("imgs/BW_RV_BG_2.jpg");
+  
 }
 .main > header > button {
   font-size: 1em;
@@ -113,6 +124,8 @@
   padding: .5em;
   border: none;
   margin-right: .5em;
+  background-color: #aee9fb;
+
 }
 .main > header > .app-name {
   font-size: 1.6em;
@@ -145,26 +158,33 @@
 }
 
 .entry-list {
-  border: solid black 1px;
+  border: solid black 0px;
 }
 .entry-list > .loader {
   padding: 1em;
+  background-color: #ffffffee;
+  border-radius: 1em;
 }
 .entry-list > .entry {
   list-style: none;
 }
 .entry-list > .entry:not(:first-child) {
-  border-top: solid black 1px;
+  border-top: solid black 0px;
 }
 .entry-list > .entry > * {
   padding: 1em;
+  border: solid black 1px;
+  background-color: #ffffffee;
+  border-radius: 1em;
+  padding: 1em;
 }
 .entry-list > .entry > :first-child {
-  background-color: #ddd;
   display: flex;
+
 }
 .entry-list > .entry > :first-child .entry-heading {
   flex-grow: 1;
+  
 }
 .entry-list > .entry > :first-child .entry-heading > h2 {
   font-size: 1em;
